@@ -8,14 +8,14 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 
-public class HelloApplication extends Application {
+public class SuperSnake extends Application {
 
     public static Stage GamePanelWindow;
     public static Scene GamePanelScene;
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("GamePanel.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(SuperSnake.class.getResource("GamePanel.fxml"));
         GamePanelScene = new Scene(fxmlLoader.load());
         stage.setTitle("Hello!");
         stage.setScene(GamePanelScene);

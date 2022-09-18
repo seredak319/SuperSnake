@@ -1,35 +1,32 @@
 package com.example.snakegamefx;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.input.KeyCode;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.WindowEvent;
 
-import javax.net.ssl.KeyManager;
 import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import static com.example.snakegamefx.GamePanel.SinglePlayerWindow;
 
 public class GameFrameControllerSinglePlayer implements Initializable {
 
-
+//TODO: niepotrzebnie tworzymy cały czas new Rectangle w shoot i snake; Można by było to stowrzyć raz i tylko zmieniac X i Y;   ++ optymalizacja
 
 
     @FXML
-    private Pane paneSP;
+    private Pane paneBackGround;
     @FXML
-    private Button backToMenu;
+    private Pane paneSnake;
+    @FXML
+    private Pane paneShoot;
+    @FXML
+    private Label bulletsAmount;
 
     private final int hight =  575;
     private final int width = 700;
@@ -38,25 +35,30 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     private final int col = width / size;
     private String currentDirection = "Right";
     private int bodyParts = 4;
-    private final int DELAY = 100;
+    private final int DELAY = 200;
     private int x[] = new int[bodyParts];
     private int y[] = new int[bodyParts];
     public static Timer timer;
     public static TimerTask timerTask;
-    private boolean running = false;
+    public static boolean running = false;
+
+    private Shoot shoot;
+
+
+
     private void paintSnake(){
-        paneSP.getChildren().removeAll();
         Platform.runLater((new Runnable() {
             @Override
             public void run() {
+                paneSnake.getChildren().clear();
                 for (int i = 0; i < bodyParts - 1; i++) {
                     Rectangle rectangle = new Rectangle();
                     rectangle.setX(x[i]);
-                    rectangle.setY(y[0]);
+                    rectangle.setY(y[i]);
                     rectangle.setHeight(size);
                     rectangle.setWidth(size);
                     rectangle.setFill(Color.BLACK);
-                    paneSP.getChildren().add(rectangle);
+                    paneSnake.getChildren().add(rectangle);
                 }
                 Rectangle rectangleHead = new Rectangle();
                 rectangleHead.setX(x[3]);
@@ -64,7 +66,7 @@ public class GameFrameControllerSinglePlayer implements Initializable {
                 rectangleHead.setHeight(size);
                 rectangleHead.setWidth(size);
                 rectangleHead.setFill(Color.CYAN);
-                paneSP.getChildren().add(rectangleHead);
+                paneSnake.getChildren().add(rectangleHead);
             }
         }));
     }
@@ -77,27 +79,23 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     }
 
     private void startGame(){
-        paintSnake();
         running = true;
+        //Initiation of snake
         timer = new Timer();
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                System.out.println("DUPA");
                 moveSnake();
             }
         };
-        timer.schedule(timerTask,0,500);
+        timer.schedule(timerTask,0,DELAY);
     }
 
     private void moveSnake(){
-
-
-        for(int i=bodyParts-1; i >0; i--){
-            x[i-1] = x[i];
-            y[i-1] = y[i];
+        for(int i=0; i < bodyParts -1; i++){
+            x[i] = x[i+1];
+            y[i] = y[i+1];
         }
-
 
         switch(currentDirection){
             case "Up" -> {
@@ -113,25 +111,32 @@ public class GameFrameControllerSinglePlayer implements Initializable {
                 x[bodyParts-1] = x[bodyParts-1] + size;
             }
         }
-
-
         paintSnake();
-
     }
+
+
+
 
     public void onButtonClickMenu(){
         SinglePlayerWindow.hide();
-        HelloApplication.GamePanelWindow.show();
+        SuperSnake.GamePanelWindow.show();
         if(running) {
             timer.cancel();
             timerTask.cancel();
         }
+        running = false;
     }
 
 
     public void keyboardMoves() {
         GamePanel.SinglePlayerScene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
+                case SHIFT -> {
+                    if(!running) {
+                        System.out.println("ENTER, stands for start");
+                        startGame();
+                    }
+                }
                 case A -> {
                     System.out.println("A");
                     if(currentDirection != "Right")
@@ -152,10 +157,10 @@ public class GameFrameControllerSinglePlayer implements Initializable {
                     if(currentDirection != "Left")
                         currentDirection = "Right";
                 }
-                case SHIFT -> {
-                    if(!running) {
-                        System.out.println("ENTER, stands for start");
-                        startGame();
+                case SPACE -> {
+                    if(running && !shoot.isShot()){
+                        System.out.println("STRZELAM KURWO!!");
+                        shoot.doShoot(x[bodyParts-1], y[bodyParts-1], currentDirection);
                     }
                 }
             }
@@ -167,13 +172,18 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         for(int i=0; i<row+1; i++){
             Line line = new Line(0,i*size,width,i*size);
-            paneSP.getChildren().add(line);
+            paneBackGround.getChildren().add(line);
         }
 
         for(int i=0; i<col; i++){
             Line line = new Line(i*size,0,i*size,hight);
-            paneSP.getChildren().add(line);
+            paneBackGround.getChildren().add(line);
         }
+
+        shoot = new Shoot( size, paneShoot, bulletsAmount );
+
+        bulletsAmount.setText(Integer.toString(shoot.getSTART_VALUE()));
         reset();
+        paintSnake();
     }
 }
