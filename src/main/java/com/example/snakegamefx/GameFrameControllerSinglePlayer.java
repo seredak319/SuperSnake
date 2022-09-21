@@ -1,6 +1,7 @@
 package com.example.snakegamefx;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -8,6 +9,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.WindowEvent;
 
 import java.net.URL;
 import java.util.*;
@@ -26,6 +28,8 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     @FXML
     private Pane paneShoot;
     @FXML
+    private Pane paneSpawn;
+    @FXML
     private Label bulletsAmount;
 
     private final int hight =  575;
@@ -33,134 +37,57 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     private final int size = 25;
     private final int row = hight / size;
     private final int col = width / size;
-    private String currentDirection = "Right";
-    private int bodyParts = 4;
-    private final int DELAY = 200;
-    private int x[] = new int[bodyParts];
-    private int y[] = new int[bodyParts];
-    public static Timer timer;
-    public static TimerTask timerTask;
-    public static boolean running = false;
+    private static Snake snake;
 
-    private Shoot shoot;
-
-
-
-    private void paintSnake(){
-        Platform.runLater((new Runnable() {
-            @Override
-            public void run() {
-                paneSnake.getChildren().clear();
-                for (int i = 0; i < bodyParts - 1; i++) {
-                    Rectangle rectangle = new Rectangle();
-                    rectangle.setX(x[i]);
-                    rectangle.setY(y[i]);
-                    rectangle.setHeight(size);
-                    rectangle.setWidth(size);
-                    rectangle.setFill(Color.BLACK);
-                    paneSnake.getChildren().add(rectangle);
-                }
-                Rectangle rectangleHead = new Rectangle();
-                rectangleHead.setX(x[3]);
-                rectangleHead.setY(y[3]);
-                rectangleHead.setHeight(size);
-                rectangleHead.setWidth(size);
-                rectangleHead.setFill(Color.CYAN);
-                paneSnake.getChildren().add(rectangleHead);
-            }
-        }));
+    public static void kill(){
+        if(snake.isRunning())
+        snake.killSnake();
     }
-
-    private void reset(){
-        for(int i=0; i<bodyParts; i++){
-            x[i] = size*i;
-            y[i] = 0;
-        }
-    }
-
-    private void startGame(){
-        running = true;
-        //Initiation of snake
-        timer = new Timer();
-        timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                moveSnake();
-            }
-        };
-        timer.schedule(timerTask,0,DELAY);
-    }
-
-    private void moveSnake(){
-        for(int i=0; i < bodyParts -1; i++){
-            x[i] = x[i+1];
-            y[i] = y[i+1];
-        }
-
-        switch(currentDirection){
-            case "Up" -> {
-                y[bodyParts-1] = y[bodyParts-1] - size;
-            }
-            case "Down" -> {
-                y[bodyParts-1] = y[bodyParts-1] + size;
-            }
-            case "Left" -> {
-                x[bodyParts-1] = x[bodyParts-1] - size;
-            }
-            case "Right" -> {
-                x[bodyParts-1] = x[bodyParts-1] + size;
-            }
-        }
-        paintSnake();
-    }
-
-
-
 
     public void onButtonClickMenu(){
         SinglePlayerWindow.hide();
         SuperSnake.GamePanelWindow.show();
-        if(running) {
-            timer.cancel();
-            timerTask.cancel();
+        if(snake.isRunning()) {
+            snake.killSnake();
         }
-        running = false;
-    }
+        snake.setRunning(false);
 
+
+    }
 
     public void keyboardMoves() {
         GamePanel.SinglePlayerScene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case SHIFT -> {
-                    if(!running) {
+                    if(!snake.isRunning()) {
                         System.out.println("ENTER, stands for start");
-                        startGame();
+                        snake.startSnake();
                     }
                 }
                 case A -> {
                     System.out.println("A");
-                    if(currentDirection != "Right")
-                        currentDirection = "Left";
+                    if(snake.getCurrentDirection() != "Right")
+                        snake.setCurrentDirection("Left");
                 }
                 case W -> {
                     System.out.println("W");
-                    if(currentDirection != "Down")
-                        currentDirection = "Up";
+                    if(snake.getCurrentDirection() != "Down")
+                        snake.setCurrentDirection("Up");
                 }
                 case S -> {
                     System.out.println("S");
-                    if(currentDirection != "Up")
-                        currentDirection = "Down";
+                    if(snake.getCurrentDirection() != "Up")
+                        snake.setCurrentDirection("Down");
                 }
                 case D -> {
                     System.out.println("D");
-                    if(currentDirection != "Left")
-                        currentDirection = "Right";
+                    if(snake.getCurrentDirection() != "Left")
+                        snake.setCurrentDirection("Right");
                 }
                 case SPACE -> {
-                    if(running && !shoot.isShot()){
+                    if(snake.isRunning() && !snake.isShoot()){
                         System.out.println("STRZELAM KURWO!!");
-                        shoot.doShoot(x[bodyParts-1], y[bodyParts-1], currentDirection);
+                        snake.doShot();
                     }
                 }
             }
@@ -180,10 +107,7 @@ public class GameFrameControllerSinglePlayer implements Initializable {
             paneBackGround.getChildren().add(line);
         }
 
-        shoot = new Shoot( size, paneShoot, bulletsAmount );
-
-        bulletsAmount.setText(Integer.toString(shoot.getSTART_VALUE()));
-        reset();
-        paintSnake();
+        snake = new Snake(paneSnake, paneShoot, paneSpawn, bulletsAmount, size );
+        bulletsAmount.setText(Integer.toString(snake.getAmountOfAmmo()));
     }
 }

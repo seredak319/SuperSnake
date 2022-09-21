@@ -22,12 +22,18 @@ public class Shoot {
     private final Pane paneShoot;
     private int shootX;
     private int shootY;
+    private int shootSpawnX;
+    private int shootSpawnY;
+    private Rectangle rectangleAmmo;
     private final Label bulletsAmount;
+    private boolean spawnedAmmo;
+    private final Pane paneSpawn;
 
 
-    Shoot(int size, Pane paneShoot, Label bulletsAmount){
+    Shoot(int size, Pane paneShoot, Pane paneSpawn, Label bulletsAmount){
         this.size = size;
         this.paneShoot = paneShoot;
+        this.paneSpawn = paneSpawn;
         this.bulletsAmount = bulletsAmount;
         ammo = START_VALUE;
     }
@@ -115,13 +121,44 @@ public class Shoot {
         }
     }
 
-    private void spawnAmmo(){
+    public void spawnAmmo(){
+        spawnedAmmo = true;
         random = new Random();
-        int ammoX = random.nextInt(27) * size;
-        int ammoY = random.nextInt(22) * size;
-
-
+        rectangleAmmo = new Rectangle();
+        rectangleAmmo.setWidth(size);
+        rectangleAmmo.setHeight(size);
+        shootSpawnX = random.nextInt(27) * size;
+        shootSpawnY = random.nextInt(22) * size;
+        rectangleAmmo.setX(shootSpawnX);
+        rectangleAmmo.setY(shootSpawnY);
+        rectangleAmmo.setFill(Color.LIGHTGOLDENRODYELLOW);
+        Platform.runLater((() -> {
+            paneSpawn.getChildren().add(rectangleAmmo);
+        }));
     }
+
+    public void addAmmo(){
+        spawnedAmmo = false;
+        Platform.runLater((() -> {
+            paneSpawn.getChildren().clear();
+            bulletsAmount.setText(Integer.toString(++ammo));
+        }));
+        shootSpawnX = -1;
+        shootSpawnY = -1;
+    }
+
+    public boolean getSpawnedAmmo(){
+        return spawnedAmmo;
+    }
+
+    public int getXOfSpawnedAmmo(){
+        return shootSpawnX;
+    }
+
+    public int getYOfSpawnedAmmo(){
+        return shootSpawnY;
+    }
+
 
     public int getSTART_VALUE() {
         return START_VALUE;
