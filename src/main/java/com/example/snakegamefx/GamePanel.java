@@ -1,10 +1,12 @@
 package com.example.snakegamefx;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
@@ -31,13 +33,23 @@ public class GamePanel implements Initializable {
     public static Scene SinglePlayerScene;
     public static SnakeDecoration snakeDecoration;
 
+    public FXMLLoader fxmlLoader;
+    private GameFrameControllerSinglePlayer gameFrameControllerSinglePlayer;
+
+
 
     public void onSingleGamePicClick(ActionEvent event) throws IOException {
-        GameFrameControllerSinglePlayer gameFrameControllerSinglePlayer = new GameFrameControllerSinglePlayer();
+
         System.out.println("Wybrano grę jedeno osobową ;)");
         try{
-            FXMLLoader fxmlLoader = new FXMLLoader();
+
+            fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("GameFrameSinglePlayer.fxml"));
+            //Parent root = fxmlLoader.load();
+
+            //gameFrameControllerSinglePlayer = fxmlLoader.getController();
+            //gameFrameControllerSinglePlayer.setSnakeDecoration(snakeDecoration);
+
             SinglePlayerScene = new Scene(fxmlLoader.load());
             SinglePlayerWindow = new Stage();
             SinglePlayerWindow.setTitle("Single Player");
@@ -46,13 +58,22 @@ public class GamePanel implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
         GamePanelWindow.hide();
+        snakeDecoration.setRunning(false);
+
+
+
         SinglePlayerWindow.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
+              //  SuperSnake.kill = true;
                 System.out.println("Shot down singlegame");
-                GameFrameControllerSinglePlayer.kill();
-                GamePanel.killDecoratingSnakes();
-
+                //GameFrameControllerSinglePlayer.kill();
+                //GamePanel.killDecoratingSnakes();
+//                BadSnake.killDecSnakes();
+//                BadSnake.killSnakeDecoration();
+                Platform.exit();
+                //System.exit(2);
             }
         });
     }
@@ -60,6 +81,8 @@ public class GamePanel implements Initializable {
     public static void killDecoratingSnakes(){
         System.out.println("killing decorating snakes");
         snakeDecoration.killSnakeDecoration();
+//        BadSnake.killSnakeDecoration();
+//        BadSnake.killDecSnakes();
     }
 
     public void addSnake(){
@@ -78,6 +101,7 @@ public class GamePanel implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+
         // Images on buttons (single and multiplayer)
         ImageView imageSP = new ImageView(Objects.requireNonNull(getClass().getResource("img/impSP.png")).toExternalForm());
         imageSP.setFitHeight(80);
@@ -88,13 +112,14 @@ public class GamePanel implements Initializable {
         imageMP.setFitWidth(80);
         buttonMP.setGraphic(imageMP);
         System.out.println("Inited SnakeDecotation");
-        snakeDecoration = new SnakeDecoration(paneSnakeGamePanel,25);
+        snakeDecoration = new SnakeDecoration(paneSnakeGamePanel,25,60);
         snakeDecoration.newSnakeDecoration("Up",0);
-        snakeDecoration.newSnakeDecoration("Right",200);
-        snakeDecoration.newSnakeDecoration("Down",700);
-        snakeDecoration.newSnakeDecoration("Left",700);
+        snakeDecoration.newSnakeDecoration("Right",0);
+        snakeDecoration.newSnakeDecoration("Down",0);
+        snakeDecoration.newSnakeDecoration("Left",0);
+        snakeDecoration.startSnakes();
 
-
+       // gameFrameControllerSinglePlayer = new GameFrameControllerSinglePlayer(snakeDecoration);
     }
 
 

@@ -12,14 +12,11 @@ import java.util.TimerTask;
 public class Snake{
 
     private final Pane paneSnake;
-    private final Pane paneShoot;
-    private final Label bulletsAmount;
-    private final Pane paneSpawn;
     private String currentDirection = "Right";
-    private final int bodyParts = 4;
-    private final int DELAY = 200;
-    private int x[] = new int[bodyParts];
-    private int y[] = new int[bodyParts];
+    private static final int bodyParts = 4;
+    private final int DELAY = 140;
+    private static int[] x = new int[bodyParts];
+    private static int[] y = new int[bodyParts];
     private static Timer timerSnake;
     private static TimerTask timerTaskSnake;
     private final int size;
@@ -27,13 +24,11 @@ public class Snake{
     private Shoot shoot;
 
 
-    public Snake(Pane paneSnake, Pane paneShoot, Pane paneSpawn, Label bulletsAmount, int size){
+
+    public Snake(Pane paneSnake, Shoot shoot, int size){
         this.paneSnake = paneSnake;
-        this.paneShoot = paneShoot;
-        this.paneSpawn = paneSpawn;
-        this.bulletsAmount = bulletsAmount;
+        this.shoot = shoot;
         this.size = size;
-        shoot = new Shoot(size,paneShoot,paneSpawn, bulletsAmount);
         resetSnake();
         paintSnake();
     }
@@ -76,6 +71,8 @@ public class Snake{
         timerTaskSnake = new TimerTask() {
             @Override
             public void run() {
+                if(SuperSnake.kill)
+                    killSnake();
                 moveSnake();
             }
         };
@@ -125,28 +122,12 @@ public class Snake{
         timerSnake.cancel();
     }
 
-    public void doShot(){
-        shoot.doShoot(x[bodyParts-1],y[bodyParts-1],currentDirection);
-    }
-
-    public TimerTask getTimerTaskSnake() {
-        return timerTaskSnake;
-    }
-
-    public Timer getTimerSnake() {
-        return timerSnake;
-    }
-
-    public boolean isRunning() {
+    public boolean isRunning(){
         return running;
     }
 
     public void setRunning(boolean running) {
         this.running = running;
-    }
-
-    public int getAmountOfAmmo(){
-        return shoot.getSTART_VALUE();
     }
 
     public void setCurrentDirection(String currentDirection) {
@@ -155,10 +136,6 @@ public class Snake{
 
     public String getCurrentDirection() {
         return currentDirection;
-    }
-
-    public boolean isShoot(){
-        return shoot.isShot();
     }
 
     public int getSnakeHeadX(){

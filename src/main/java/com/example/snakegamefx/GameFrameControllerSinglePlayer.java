@@ -13,7 +13,6 @@ import javafx.stage.WindowEvent;
 
 import java.net.URL;
 import java.util.*;
-
 import static com.example.snakegamefx.GamePanel.SinglePlayerWindow;
 
 public class GameFrameControllerSinglePlayer implements Initializable {
@@ -30,6 +29,8 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     @FXML
     private Pane paneSpawn;
     @FXML
+    private Pane paneBadSnakes;
+    @FXML
     private Label bulletsAmount;
 
     private final int hight =  575;
@@ -37,23 +38,40 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     private final int size = 25;
     private final int row = hight / size;
     private final int col = width / size;
-    private static Snake snake;
+    private Snake snake;
+    private BadSnake badSnake;
+    private Shoot shoot;
+    private SnakeDecoration snakeDecoration;
 
-    public static void kill(){
-        if(snake.isRunning())
-        snake.killSnake();
+
+//    public GameFrameControllerSinglePlayer(SnakeDecoration snakeDecoration){
+//        this.snakeDecoration = snakeDecoration;
+//    }
+
+    public void setSnakeDecoration(SnakeDecoration snakeDecoration){
+        this.snakeDecoration = snakeDecoration;
     }
+
+    private void startBadSnakes(){
+       // badSnake.newBadSnake("Right");
+        badSnake.newBadSnakeRandomDirection();
+        badSnake.newBadSnakeRandomDirection();
+        badSnake.newBadSnakeRandomDirection();
+        badSnake.startSnakes();
+        badSnake.start();
+    }
+
 
     public void onButtonClickMenu(){
         SinglePlayerWindow.hide();
         SuperSnake.GamePanelWindow.show();
-        if(snake.isRunning()) {
-            snake.killSnake();
-        }
+//
+        SnakeDecoration.startSnakes();
         snake.setRunning(false);
-
+        badSnake.setRunning(false);
 
     }
+
 
     public void keyboardMoves() {
         GamePanel.SinglePlayerScene.setOnKeyPressed(e -> {
@@ -62,6 +80,7 @@ public class GameFrameControllerSinglePlayer implements Initializable {
                     if(!snake.isRunning()) {
                         System.out.println("ENTER, stands for start");
                         snake.startSnake();
+                        startBadSnakes();
                     }
                 }
                 case A -> {
@@ -85,9 +104,9 @@ public class GameFrameControllerSinglePlayer implements Initializable {
                         snake.setCurrentDirection("Right");
                 }
                 case SPACE -> {
-                    if(snake.isRunning() && !snake.isShoot()){
+                    if(snake.isRunning() && !shoot.isShoot()){
                         System.out.println("STRZELAM KURWO!!");
-                        snake.doShot();
+                        shoot.doShoot(snake.getSnakeHeadX(),snake.getSnakeHeadY(),snake.getCurrentDirection());
                     }
                 }
             }
@@ -107,7 +126,9 @@ public class GameFrameControllerSinglePlayer implements Initializable {
             paneBackGround.getChildren().add(line);
         }
 
-        snake = new Snake(paneSnake, paneShoot, paneSpawn, bulletsAmount, size );
-        bulletsAmount.setText(Integer.toString(snake.getAmountOfAmmo()));
+        badSnake = new BadSnake(paneBadSnakes);
+        shoot = new Shoot(size,paneShoot,paneSpawn, bulletsAmount,badSnake);
+        snake = new Snake(paneSnake, shoot, size );
+        bulletsAmount.setText(Integer.toString(shoot.getAmmo()));
     }
 }

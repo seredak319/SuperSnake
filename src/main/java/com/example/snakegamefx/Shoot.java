@@ -9,13 +9,14 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 public class Shoot {
 
-    public static Timer timerShoot;
-    public static TimerTask timerTaskShoot;
+    public Timer timerShoot;
+    public TimerTask timerTaskShoot;
     private boolean shot = false;
     private int ammo;
-    private final int START_VALUE = 5;
+    private final int START_VALUE = 500;
     private Random random;
     private final int size;
     private String direction;
@@ -28,13 +29,16 @@ public class Shoot {
     private final Label bulletsAmount;
     private boolean spawnedAmmo;
     private final Pane paneSpawn;
+    private BadSnake badSnake;
+    private final int bodyParts =4;
 
 
-    Shoot(int size, Pane paneShoot, Pane paneSpawn, Label bulletsAmount){
+    Shoot(int size, Pane paneShoot, Pane paneSpawn, Label bulletsAmount, BadSnake badSnake){
         this.size = size;
         this.paneShoot = paneShoot;
         this.paneSpawn = paneSpawn;
         this.bulletsAmount = bulletsAmount;
+        this.badSnake = badSnake;
         ammo = START_VALUE;
     }
 
@@ -119,6 +123,42 @@ public class Shoot {
             System.out.println("Uderzyło w scianę");
             killShooting();
         }
+
+        for(int j=0; j<badSnake.getHowManySnakes(); j++)
+            switch (badSnake.getDirection(j)){
+                case "Right" -> {
+                    if (shootY == badSnake.getStartY(j))
+                        if (shootX <= badSnake.getX(j, bodyParts - 1) && shootX >= badSnake.getX(j, 0)) {
+                            System.out.println("Trafiono! [RIGHT]");
+                            badSnake.killSingleBadSnake(j);
+                            killShooting();
+                        }
+                }
+                case "Left" -> {
+                    if (shootY == badSnake.getStartY(j))
+                        if (shootX >= badSnake.getX(j, bodyParts - 1) && shootX <= badSnake.getX(j, 0)) {
+                            System.out.println("Trafiono! [LEFT]");
+                            badSnake.killSingleBadSnake(j);
+                            killShooting();
+                        }
+                }
+                case "Up" -> {
+                    if (shootX == badSnake.getStartX(j))
+                        if (shootY <= badSnake.getY(j,bodyParts-1) && shootY >= badSnake.getY(j,0)){
+                            System.out.println("Trafiono! [Up]");
+                            badSnake.killSingleBadSnake(j);
+                            killShooting();
+                        }
+                }
+                case "Down" -> {
+                    if (shootX == badSnake.getStartX(j))
+                        if (shootY >= badSnake.getY(j,bodyParts-1) && shootY <= badSnake.getY(j,0)){
+                            System.out.println("Trafiono! [Down]");
+                            badSnake.killSingleBadSnake(j);
+                            killShooting();
+                        }
+                }
+            }
     }
 
     public void spawnAmmo(){
@@ -159,6 +199,13 @@ public class Shoot {
         return shootSpawnY;
     }
 
+    public int getAmmo(){
+        return ammo;
+    }
+
+    public boolean isShoot(){
+        return shot;
+    }
 
     public int getSTART_VALUE() {
         return START_VALUE;
@@ -167,6 +214,15 @@ public class Shoot {
     public boolean isShot() {
         return shot;
     }
+
+
+    public int getShootX() {
+        return shootX;
+    }
+    public int getShootY() {
+        return shootY;
+    }
+
 }
 //
 //
