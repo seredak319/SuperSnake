@@ -1,15 +1,9 @@
 package com.example.snakegamefx;
 
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,10 +14,7 @@ public class SuperSnake extends Application {
 
 
     public static Stage GamePanelWindow;
-    public static Scene GamePanelScene;
-    private static GamePanel gamePanel;
-    public static boolean kill = false;
-
+    public Scene GamePanelScene;
     private final ExecutorService exec = Executors.newCachedThreadPool();
 
     @Override
@@ -50,21 +41,10 @@ public class SuperSnake extends Application {
         stage.setOpacity(0.95);
         stage.show();
         GamePanelWindow = stage;
-       // SuperSnake.GamePanelWindow.hide();
-
-        GamePanelWindow.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent we) {
-                System.out.println("Stage is closing");
-                //GamePanel.killDecoratingSnakes();
-                kill = true;
-            }
-        });
-
     }
 
 
     public static void main(String[] args) {
         launch();
-
     }
 }

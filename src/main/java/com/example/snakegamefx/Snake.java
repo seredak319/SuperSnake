@@ -1,28 +1,24 @@
 package com.example.snakegamefx;
 
 import javafx.application.Platform;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import static java.lang.Thread.currentThread;
+import static java.lang.Thread.sleep;
 
 public class Snake{
 
     private final Pane paneSnake;
     private String currentDirection = "Right";
-    private static final int bodyParts = 4;
+    private final int bodyParts = 4;
     private final int DELAY = 140;
-    private static int[] x = new int[bodyParts];
-    private static int[] y = new int[bodyParts];
-    private static Timer timerSnake;
-    private static TimerTask timerTaskSnake;
+    private final int[] x = new int[bodyParts];
+    private final int[] y = new int[bodyParts];
     private final int size;
     private boolean running = false;
-    private Shoot shoot;
-
+    private final Shoot shoot;
 
 
     public Snake(Pane paneSnake, Shoot shoot, int size){
@@ -65,24 +61,26 @@ public class Snake{
 
     public void startSnake(){
         running = true;
-        shoot.spawnAmmo();
-        //Initiation of snake
-        timerSnake = new Timer();
-        timerTaskSnake = new TimerTask() {
-            @Override
-            public void run() {
-                if(SuperSnake.kill)
-                    killSnake();
+        Thread thread = new Thread(() -> {
+            while (running) {
                 moveSnake();
+                try {
+                    sleep(DELAY);
+                } catch (InterruptedException e) {
+                    System.out.println("Sleep was interrupted!");
+                }
             }
-        };
-        timerSnake.schedule(timerTaskSnake,0,DELAY);
+            System.out.println("SnakeDecoration: thread exited;");
+            try {
+                currentThread().join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        thread.start();
     }
 
     void moveSnake(){
-        if(!running)
-            killSnake();
-
         checkCollisionsAmmo();
 
         for(int i=0; i < bodyParts -1; i++){
@@ -91,18 +89,10 @@ public class Snake{
         }
 
         switch(currentDirection){
-            case "Up" -> {
-                y[bodyParts-1] = y[bodyParts-1] - size;
-            }
-            case "Down" -> {
-                y[bodyParts-1] = y[bodyParts-1] + size;
-            }
-            case "Left" -> {
-                x[bodyParts-1] = x[bodyParts-1] - size;
-            }
-            case "Right" -> {
-                x[bodyParts-1] = x[bodyParts-1] + size;
-            }
+            case "Up" -> y[bodyParts-1] = y[bodyParts-1] - size;
+            case "Down" -> y[bodyParts-1] = y[bodyParts-1] + size;
+            case "Left" -> x[bodyParts-1] = x[bodyParts-1] - size;
+            case "Right" -> x[bodyParts-1] = x[bodyParts-1] + size;
         }
         paintSnake();
     }
@@ -117,10 +107,6 @@ public class Snake{
         }
     }
 
-    public void killSnake(){
-        timerTaskSnake.cancel();
-        timerSnake.cancel();
-    }
 
     public boolean isRunning(){
         return running;

@@ -39,6 +39,7 @@ public class BadSnake extends Thread{
         System.out.println("BadSnake: newBadSnake");
     }
 
+    //todo !!!
     public void killSingleBadSnake(int j){
         //howManySnakes--;
 
@@ -76,10 +77,10 @@ public class BadSnake extends Thread{
             }
             case "Down" -> {
                 this.startX[howManySnakesLocal-1] = random.nextInt((int) (paneBadSnake.getPrefHeight()/size - 1))*size;
-                this.startY[howManySnakesLocal-1] = (int) paneBadSnake.getPrefHeight();
+                this.startY[howManySnakesLocal-1] = (int) paneBadSnake.getPrefHeight() - size;
                 for(int i=0; i<bodyParts; i++){
                     x[howManySnakesLocal-1][i] = startX[howManySnakesLocal-1];
-                    y[howManySnakesLocal-1][i] = startY[howManySnakesLocal-1] + size*i;
+                    y[howManySnakesLocal-1][i] = startY[howManySnakesLocal-1] /*+ size*i*/;
                 }
             }
         }
@@ -112,7 +113,7 @@ public class BadSnake extends Thread{
         running = true;
         //Initiation of snake
         threadBadSnakes = new Thread(() -> {
-            while(!SuperSnake.kill && running) {
+            while(running) {
                 moveSnakes();
                 try {
                     Thread.sleep(200);
@@ -125,9 +126,6 @@ public class BadSnake extends Thread{
     }
 
     private void moveSnakes(){
-        //System.out.println("BadSnake: moveSnakes");
-       // System.out.println("BadSnake: "+ Snake.getSnakeHeadX());
-      //  System.out.println("BadSnake: [shoot]: " + Shoot.getShootX());
         for(int j=0; j<howManySnakes; j++) {
             for (int i = 0; i < bodyParts - 1; i++) {
                 x[j][i] = x[j][i + 1];
@@ -178,6 +176,7 @@ public class BadSnake extends Thread{
                     rectangle.setHeight(size);
                     rectangle.setWidth(size);
                     rectangle.setFill(Color.BLACK);
+                    if(checkBorderForUpSnake(j,i))
                     paneBadSnake.getChildren().add(rectangle);
                 }
                 Rectangle rectangleHead = new Rectangle();
@@ -186,10 +185,16 @@ public class BadSnake extends Thread{
                 rectangleHead.setHeight(size);
                 rectangleHead.setWidth(size);
                 rectangleHead.setFill(Color.RED);
+                if(checkBorderForUpSnake(j,bodyParts-1))
                 paneBadSnake.getChildren().add(rectangleHead);
             }
         }));
+    }
 
+    private boolean checkBorderForUpSnake(int j,int i){  // that's not excellent (just not to make badsnake goes out of border)
+        if(y[j][i] >= paneBadSnake.getPrefHeight())
+            return false;
+        return true;
     }
 
     public void setRunning(boolean b) {

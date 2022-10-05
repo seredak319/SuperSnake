@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane onKeyPressed="#keyboardMoves" opacity="0.5" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.snakegamefx.GameFrameControllerSinglePlayer">
+<AnchorPane onKeyPressed="#keyboardMoves" opacity="0.5" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.snakegamefx.GameFrameControllerSinglePlayer">
    <children>
       <Pane fx:id="paneBackGround" opacity="0.59" prefHeight="575.0" prefWidth="700.0" style="-fx-background-color: grey;" />
       <Pane fx:id="paneSnake" focusTraversable="true" prefHeight="575.0" prefWidth="700.0" />
       <Pane fx:id="paneShoot" prefHeight="575.0" prefWidth="700.0" />
       <Pane fx:id="paneSpawn" prefHeight="575.0" prefWidth="700.0" />
-      <Pane fx:id="paneBadSnakes" prefHeight="575.0" prefWidth="700.0" />
+      <Pane fx:id="paneBadSnakes" prefHeight="575.0" prefWidth="700.0">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets></Pane>
+      <Pane layoutX="-1.0" layoutY="575.0" prefHeight="117.0" prefWidth="700.0" />
       <Button fx:id="backToMenu" blendMode="EXCLUSION" cancelButton="true" focusTraversable="false" layoutX="14.0" layoutY="661.0" mnemonicParsing="false" onAction="#onButtonClickMenu" text="menu" textOverrun="CLIP" />
       <ImageView fitHeight="78.0" fitWidth="86.0" layoutX="577.0" layoutY="582.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -21,5 +26,15 @@
          <font>
             <Font name="Verdana" size="25.0" />
          </font></Label>
+      <Label alignment="CENTER" layoutX="14.0" layoutY="608.0" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: GREY; -fx-border-color: BLACK;">
+         <font>
+            <Font name="Verdana" size="25.0" />
+         </font></Label>
+      <ProgressBar layoutX="179.0" layoutY="628.0" prefHeight="25.0" prefWidth="368.0" progress="0.0" />
+      <Label layoutX="16.0" layoutY="582.0" prefHeight="25.0" prefWidth="89.0" text="Your score:">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

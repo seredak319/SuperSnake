@@ -6,18 +6,15 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
+
+import static java.lang.Thread.sleep;
 
 
 public class Shoot {
 
-    public Timer timerShoot;
-    public TimerTask timerTaskShoot;
     private boolean shot = false;
     private int ammo;
     private final int START_VALUE = 500;
-    private Random random;
     private final int size;
     private String direction;
     private final Pane paneShoot;
@@ -29,8 +26,9 @@ public class Shoot {
     private final Label bulletsAmount;
     private boolean spawnedAmmo;
     private final Pane paneSpawn;
-    private BadSnake badSnake;
+    private final BadSnake badSnake;
     private final int bodyParts =4;
+    private Thread thread;
 
 
     Shoot(int size, Pane paneShoot, Pane paneSpawn, Label bulletsAmount, BadSnake badSnake){
@@ -44,25 +42,29 @@ public class Shoot {
 
     private void initShooting(){
         System.out.println("InitShooting");
-        timerShoot = new Timer();
-        timerTaskShoot = new TimerTask() {
-            @Override
-            public void run() {
+        thread = new Thread(() -> {
+            while (isShot()) {
                 moveShoot(direction);
+                try {
+                    sleep(50);
+                } catch (InterruptedException e) {
+                    System.out.println("Sleep was interrupted!");
+                }
             }
-        };
-        int SHOOT_DELAY = 50;
-        timerShoot.schedule(timerTaskShoot,0, SHOOT_DELAY);
+            System.out.println("SnakeDecoration: thread exited;");
+        });
+        thread.start();
     }
 
-    private void killShooting(){
-        Platform.runLater((() -> {
-            paneShoot.getChildren().clear();
-        }));
-        timerTaskShoot.cancel();
-        timerShoot.cancel();
 
+    private void killShooting() {
+        Platform.runLater((() -> paneShoot.getChildren().clear()));
         shot = false;
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void doShoot(int shootX, int shootY, String direction){
@@ -70,10 +72,10 @@ public class Shoot {
         if(!checkAmmo())
             return;
         shot = true;
-        initShooting();
         this.shootX = shootX;
         this.shootY = shootY;
         this.direction = direction;
+        initShooting();
     }
 
     private boolean checkAmmo(){
@@ -88,18 +90,10 @@ public class Shoot {
 
     private void moveShoot(String direction){
         switch (direction){
-            case "Up" -> {
-                shootY -= size;
-            }
-            case "Down" -> {
-                shootY += size;
-            }
-            case "Left" -> {
-                shootX -= size;
-            }
-            case "Right" -> {
-                shootX += size;
-            }
+            case "Up" -> shootY -= size;
+            case "Down" -> shootY += size;
+            case "Left" -> shootX -= size;
+            case "Right" -> shootX += size;
         }
         printShoot();
         checkCollisionOfShoot();
@@ -163,7 +157,7 @@ public class Shoot {
 
     public void spawnAmmo(){
         spawnedAmmo = true;
-        random = new Random();
+        Random random = new Random();
         rectangleAmmo = new Rectangle();
         rectangleAmmo.setWidth(size);
         rectangleAmmo.setHeight(size);
@@ -172,9 +166,7 @@ public class Shoot {
         rectangleAmmo.setX(shootSpawnX);
         rectangleAmmo.setY(shootSpawnY);
         rectangleAmmo.setFill(Color.LIGHTGOLDENRODYELLOW);
-        Platform.runLater((() -> {
-            paneSpawn.getChildren().add(rectangleAmmo);
-        }));
+        Platform.runLater((() -> paneSpawn.getChildren().add(rectangleAmmo)));
     }
 
     public void addAmmo(){
@@ -207,20 +199,8 @@ public class Shoot {
         return shot;
     }
 
-    public int getSTART_VALUE() {
-        return START_VALUE;
-    }
-
     public boolean isShot() {
         return shot;
-    }
-
-
-    public int getShootX() {
-        return shootX;
-    }
-    public int getShootY() {
-        return shootY;
     }
 
 }
