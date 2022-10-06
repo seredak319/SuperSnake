@@ -80,7 +80,7 @@ public class Snake{
         thread.start();
     }
 
-    void moveSnake(){
+    private void moveSnake(){
         checkCollisionsAmmo();
 
         for(int i=0; i < bodyParts -1; i++){

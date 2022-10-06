@@ -3,10 +3,12 @@ package com.example.snakegamefx;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class GameFrameControllerSinglePlayer implements Initializable {
 
@@ -25,19 +27,40 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     private Pane paneBadSnakes;
     @FXML
     private Label bulletsAmount;
+    @FXML
+    private Label pointsAmount;
+    @FXML
+    private ProgressBar progressBar;
 
     private Snake snake;
     private BadSnake badSnake;
     private Shoot shoot;
+    private long start;
+    private long end;
+    private int points = 0;
+    private double progress = 0;
 
     private void startBadSnakes(){
         badSnake.newBadSnake("Right");
+        badSnake.newBadSnake("Left");
+        badSnake.newBadSnakeRandomDirection();
+      //  badSnake.newBadSnake("Up");
+       // badSnake.newBadSnake("Down");
         //badSnake.newBadSnake("Up");
         //badSnake.newBadSnakeRandomDirection();
         //badSnake.newBadSnakeRandomDirection();
        // badSnake.newBadSnakeRandomDirection();
         badSnake.startSnakes();
         badSnake.start();
+    }
+
+
+
+    public void finishTheGame(){
+        end = System.currentTimeMillis();
+        snake.setRunning(false);
+        badSnake.setRunning(false);
+        System.out.println("Wow! Your time is: " + (end - start));
     }
 
 
@@ -57,6 +80,7 @@ public class GameFrameControllerSinglePlayer implements Initializable {
                         System.out.println("ENTER, stands for start");
                         snake.startSnake();
                         startBadSnakes();
+                        start = System.currentTimeMillis();
                     }
                 }
                 case A -> {
@@ -108,9 +132,10 @@ public class GameFrameControllerSinglePlayer implements Initializable {
             paneBackGround.getChildren().add(line);
         }
 
-        badSnake = new BadSnake(paneBadSnakes);
+        badSnake = new BadSnake(paneBadSnakes, pointsAmount, progressBar);
         shoot = new Shoot(size,paneShoot,paneSpawn, bulletsAmount,badSnake);
         snake = new Snake(paneSnake, shoot, size);
         bulletsAmount.setText(Integer.toString(shoot.getAmmo()));
+        pointsAmount.setText(Integer.toString(0));
     }
 }
