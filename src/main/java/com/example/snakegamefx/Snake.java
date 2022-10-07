@@ -71,6 +71,9 @@ public class Snake{
                 }
             }
             System.out.println("SnakeDecoration: thread exited;");
+            Platform.runLater((() -> {
+                paneSnake.getChildren().clear();
+            }));
             try {
                 currentThread().join();
             } catch (InterruptedException e) {

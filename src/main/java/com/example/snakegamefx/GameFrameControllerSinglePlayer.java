@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import java.net.URL;
@@ -31,14 +32,18 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     private Label pointsAmount;
     @FXML
     private ProgressBar progressBar;
+    @FXML
+    private Label time;
+    @FXML
+    private ImageView finishImage;
 
     private Snake snake;
     private BadSnake badSnake;
     private Shoot shoot;
-    private long start;
-    private long end;
     private int points = 0;
     private double progress = 0;
+    private long timeElapsed;
+
 
     private void startBadSnakes(){
         badSnake.newBadSnake("Right");
@@ -54,14 +59,6 @@ public class GameFrameControllerSinglePlayer implements Initializable {
         badSnake.start();
     }
 
-
-
-    public void finishTheGame(){
-        end = System.currentTimeMillis();
-        snake.setRunning(false);
-        badSnake.setRunning(false);
-        System.out.println("Wow! Your time is: " + (end - start));
-    }
 
 
     public void onButtonClickMenu(){
@@ -80,7 +77,7 @@ public class GameFrameControllerSinglePlayer implements Initializable {
                         System.out.println("ENTER, stands for start");
                         snake.startSnake();
                         startBadSnakes();
-                        start = System.currentTimeMillis();
+                        badSnake.start = System.nanoTime();
                     }
                 }
                 case A -> {
@@ -135,6 +132,9 @@ public class GameFrameControllerSinglePlayer implements Initializable {
         badSnake = new BadSnake(paneBadSnakes, pointsAmount, progressBar);
         shoot = new Shoot(size,paneShoot,paneSpawn, bulletsAmount,badSnake);
         snake = new Snake(paneSnake, shoot, size);
+        badSnake.setSnake(snake);
+        badSnake.setTimeLabel(time);
+        badSnake.setFinishImage(finishImage);
         bulletsAmount.setText(Integer.toString(shoot.getAmmo()));
         pointsAmount.setText(Integer.toString(0));
     }
