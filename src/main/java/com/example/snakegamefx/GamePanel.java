@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import static com.example.snakegamefx.SuperSnake.GamePanelWindow;
 
 public class GamePanel implements Initializable {
 
@@ -22,41 +21,32 @@ public class GamePanel implements Initializable {
     private Button buttonSP;
     @FXML
     private Button buttonMP;
-    public static Stage LevelsSwitcher;
-    public static Scene SinglePlayerScene;
-    public SnakeDecoration snakeDecoration;
-    public FXMLLoader fxmlLoader;
+    private SnakeDecoration snakeDecoration;
+    private final Container container;
 
+    public GamePanel(Container container) {
+        this.container = container;
+    }
 
     public void onSingleGamePicClick() {
         System.out.println("Wybrano grę jedeno osobową ;)");
-//        try{
-//            fxmlLoader = new FXMLLoader();
-//            fxmlLoader.setLocation(getClass().getResource("GameFrameSinglePlayer.fxml"));
-//            fxmlLoader.setControllerFactory( c -> new GameFrameControllerSinglePlayer(snakeDecoration));
-//            SinglePlayerScene = new Scene(fxmlLoader.load());
-//            SinglePlayerWindow = new Stage();
-//            SinglePlayerWindow.setTitle("Single Player");
-//            SinglePlayerWindow.setScene(SinglePlayerScene);
-//            SinglePlayerWindow.show();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-
         try{
-            fxmlLoader = new FXMLLoader();
+            container.setSnakeDecoration(snakeDecoration);
+            FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("LevelsSwitcherSinglePlayer.fxml"));
-            fxmlLoader.setControllerFactory( c -> new LevelsSwitcherController(snakeDecoration));
-            SinglePlayerScene = new Scene(fxmlLoader.load());
-            LevelsSwitcher = new Stage();
-            LevelsSwitcher.setTitle("Choose level!");
-            LevelsSwitcher.setScene(SinglePlayerScene);
-            LevelsSwitcher.show();
+            fxmlLoader.setControllerFactory(c -> new LevelsSwitcherController(container));
+            Scene singlePlayerScene = new Scene(fxmlLoader.load());
+            Stage levelsSwitcher = new Stage();
+            levelsSwitcher.setTitle("Choose level!");
+            levelsSwitcher.setScene(singlePlayerScene);
+            levelsSwitcher.show();
+            container.setLevelSwitcher(levelsSwitcher);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        GamePanelWindow.hide();
+
+        container.getGamePanelWindow().hide();
         snakeDecoration.setRunning(false);
     }
 

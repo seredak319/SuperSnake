@@ -1,57 +1,35 @@
 package com.example.snakegamefx;
 
 import javafx.application.Platform;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import java.util.LinkedList;
-import java.util.Objects;
+
 import java.util.Random;
 
 public class BadSnake extends Thread{
 
-    Pane paneBadSnake;
+    private final Pane paneBadSnake;
     private boolean running = false;
     private final int maxBadSnakes = 10;
     private final int size = 25;
-    private int howManySnakes = 0;
-    private final String[] direction = new String[maxBadSnakes];
-    private final int[] startX = new int [maxBadSnakes];
-    private final int[] startY = new int [maxBadSnakes];
+    private int howManySnakes;
+    private String[] direction;
+    private int[] startX;
+    private int[] startY;
     private final int bodyParts = 4;
-    private final int[][] x = new int [maxBadSnakes][bodyParts];
-    private final int[][] y = new int [maxBadSnakes][bodyParts];
+    private int[][] x;
+    private int[][] y;
     private final Random random = new Random();
-    private final Label pointsAmountLabel;
-    private final ProgressBar progressBar;
-    private int pointsAmount = 0;
-    private double progress = 0;
-    public long start;
-    private long end;
-    private Snake snake;
-    private Label time;
-    private ImageView finishImage;
+    private final Container container;
+    private Thread threadBadSnakes;
 
-    BadSnake(Pane paneBadSnake, Label pointsAmount, ProgressBar progressBar){
+
+
+    BadSnake(Pane paneBadSnake, Container container){
         this.paneBadSnake = paneBadSnake;
-        this.pointsAmountLabel = pointsAmount;
-        this.progressBar = progressBar;
-    }
-
-    public void setSnake(Snake snake){
-        this.snake = snake;
-    }
-
-    public void setTimeLabel(Label time){
-        this.time = time;
-    }
-
-    public void setFinishImage(ImageView finishImage){
-        this.finishImage = finishImage;
+        this.container = container;
+        resetOrInitLevel();
     }
 
     public void newBadSnake(String direction){
@@ -66,38 +44,28 @@ public class BadSnake extends Thread{
         //howManySnakes--;
 
         resetSnake("Right",j+1);
-        Platform.runLater(() -> {
-            pointsAmountLabel.setText(Integer.toString(++pointsAmount));
-            progress += 0.01;
-            progressBar.setProgress(progress);
-        });
+        container.getGameFrameControllerSinglePlayer().addPoints();
 
-        if(pointsAmount == 1){
-            finishTheGame();
-        }
        // newBadSnakeRandomDirection();
 //        newBadSnakeRandomDirection();
 //        newBadSnakeRandomDirection();
 
     }
 
-    public void finishTheGame(){
-        end = System.nanoTime();
-        double timeElapsed = (double) (end - start)/1_000_000_000;
-        running = false;
-        snake.setRunning(false);
-        System.out.println("Wow! Your time is: " + (timeElapsed));
-
-        Platform.runLater(() -> time.setText(Double.toString(timeElapsed)));
-        showFinishedScreen();
-    }
-
-    private void showFinishedScreen(){
-        finishImage = new ImageView(Objects.requireNonNull(getClass().getResource("img/zdjece.JPG")).toExternalForm());
-        finishImage.setFitHeight(600);
-        finishImage.setFitWidth(600);
-        Platform.runLater(() -> paneBadSnake.getChildren().add(finishImage));
-
+    public void resetOrInitLevel() {
+        if(running){
+            try {
+                threadBadSnakes.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        y = new int [maxBadSnakes][bodyParts];
+        x = new int [maxBadSnakes][bodyParts];
+        startY = new int [maxBadSnakes];
+        startX = new int [maxBadSnakes];
+        direction = new String[maxBadSnakes];
+        howManySnakes = 0;
     }
 
     public void resetSnake(String direction, int howManySnakesLocal){
@@ -144,26 +112,16 @@ public class BadSnake extends Thread{
         howManySnakes++;
         Random random1 = new Random();
         switch (random1.nextInt(1,5)){
-            case 1 -> {
-                direction[howManySnakes-1] = "Up";
-            }
-            case 2 -> {
-                direction[howManySnakes-1] = "Down";
-            }
-            case 3 -> {
-                direction[howManySnakes-1] = "Left";
-            }
-            case 4 -> {
-                direction[howManySnakes-1] = "Right";
-            }
+            case 1 -> direction[howManySnakes-1] = "Up";
+            case 2 -> direction[howManySnakes-1] = "Down";
+            case 3 -> direction[howManySnakes-1] = "Left";
+            case 4 -> direction[howManySnakes-1] = "Right";
         }
     }
-
-
     public void startSnakes(){
         running = true;
         //Initiation of snake
-        Thread threadBadSnakes = new Thread(() -> {
+        threadBadSnakes = new Thread(() -> {
             while (running) {
                 moveSnakes();
                 try {
@@ -276,4 +234,5 @@ public class BadSnake extends Thread{
     public String getDirection(int j) {
         return direction[j];
     }
+
 }

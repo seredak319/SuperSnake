@@ -126,7 +126,7 @@ public class SnakeDecoration extends Thread{
 
 
 
-    void moveSnakes(){
+    private void moveSnakes(){
 
         for(int j=0; j<howManySnakes; j++) {
             for (int i = 0; i < bodyParts - 1; i++) {

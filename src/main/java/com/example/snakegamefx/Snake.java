@@ -11,21 +11,22 @@ import static java.lang.Thread.sleep;
 public class Snake{
 
     private final Pane paneSnake;
-    private String currentDirection = "Right";
+    private String currentDirection;
     private final int bodyParts = 4;
     private final int DELAY = 140;
-    private final int[] x = new int[bodyParts];
-    private final int[] y = new int[bodyParts];
+    private int[] x;
+    private int[] y;
     private final int size;
     private boolean running = false;
     private final Shoot shoot;
+    private Thread threadSnake;
 
 
     public Snake(Pane paneSnake, Shoot shoot, int size){
         this.paneSnake = paneSnake;
         this.shoot = shoot;
         this.size = size;
-        resetSnake();
+        resetOrInitLevel();
         paintSnake();
     }
 
@@ -52,7 +53,19 @@ public class Snake{
         }));
     }
 
-    public void resetSnake(){
+    public void resetOrInitLevel(){
+        if(running) {
+            try {
+                threadSnake.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        x = new int[bodyParts];
+        y = new int[bodyParts];
+        currentDirection = "Right";
+
         for(int i=0; i<bodyParts; i++){
             x[i] = size*i;
             y[i] = 0;
@@ -61,7 +74,7 @@ public class Snake{
 
     public void startSnake(){
         running = true;
-        Thread thread = new Thread(() -> {
+        threadSnake = new Thread(() -> {
             while (running) {
                 moveSnake();
                 try {
@@ -80,7 +93,8 @@ public class Snake{
                 e.printStackTrace();
             }
         });
-        thread.start();
+        threadSnake.start();
+        shoot.spawnAmmo();
     }
 
     private void moveSnake(){

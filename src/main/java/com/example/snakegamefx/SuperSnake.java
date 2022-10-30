@@ -12,9 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class SuperSnake extends Application {
 
-
-    public static Stage GamePanelWindow;
-    public Scene GamePanelScene;
+    private final Container container = new Container();
     private final ExecutorService exec = Executors.newCachedThreadPool();
 
     @Override
@@ -30,19 +28,19 @@ public class SuperSnake extends Application {
         }
     }
 
-
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(SuperSnake.class.getResource("GamePanel.fxml"));
-        GamePanelScene = new Scene(fxmlLoader.load());
+        fxmlLoader.setControllerFactory( c -> new GamePanel(container));
+        Scene gamePanelScene = new Scene(fxmlLoader.load());
         stage.setTitle("Hello!");
-        stage.setScene(GamePanelScene);
+        stage.setScene(gamePanelScene);
         stage.setResizable(false);
         stage.setOpacity(0.95);
         stage.show();
-        GamePanelWindow = stage;
-    }
 
+        container.setGamePanelWindow(stage);
+    }
 
     public static void main(String[] args) {
         launch();

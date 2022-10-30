@@ -14,7 +14,7 @@ public class Shoot {
 
     private boolean shot = false;
     private int ammo;
-    private final int START_VALUE = 500;
+    private int START_VALUE = 500;
     private final int size;
     private String direction;
     private final Pane paneShoot;
@@ -56,6 +56,9 @@ public class Shoot {
         thread.start();
     }
 
+    public void clearSpawnedAmmo(){
+        Platform.runLater((() -> paneSpawn.getChildren().clear()));
+    }
 
     private void killShooting() {
         Platform.runLater((() -> paneShoot.getChildren().clear()));
@@ -156,6 +159,7 @@ public class Shoot {
     }
 
     public void spawnAmmo(){
+        System.out.println("Spawning ammo");
         spawnedAmmo = true;
         Random random = new Random();
         rectangleAmmo = new Rectangle();
@@ -171,9 +175,10 @@ public class Shoot {
 
     public void addAmmo(){
         spawnedAmmo = false;
+        ammo++;
         Platform.runLater((() -> {
             paneSpawn.getChildren().clear();
-            bulletsAmount.setText(Integer.toString(++ammo));
+            bulletsAmount.setText(Integer.toString(ammo));
         }));
         shootSpawnX = -1;
         shootSpawnY = -1;
@@ -202,6 +207,11 @@ public class Shoot {
     public boolean isShot() {
         return shot;
     }
+
+    public void setAmmo(int ammo) {
+        this.ammo = ammo;
+    }
+
 
 }
 //

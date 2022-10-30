@@ -1,30 +1,31 @@
 package com.example.snakegamefx;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.io.IOException;
 
 public class LevelsSwitcherController {
 
-    public static Stage SinglePlayerWindow;
-    public static Scene SinglePlayerScene;
-    private final SnakeDecoration snakeDecoration;
-
-    public LevelsSwitcherController(SnakeDecoration snakeDecoration){
-        this.snakeDecoration = snakeDecoration;
+    private final Container container;
+    public LevelsSwitcherController(Container container){
+        this.container = container;
     }
 
     public void onMainButtonClick(){
         try{
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("GameFrameSinglePlayer.fxml"));
-          //  fxmlLoader.setControllerFactory( c -> new GameFrameControllerSinglePlayer(snakeDecoration));
-            SinglePlayerScene = new Scene(fxmlLoader.load());
-            SinglePlayerWindow = new Stage();
-            SinglePlayerWindow.setTitle("Single Player");
-            SinglePlayerWindow.setScene(SinglePlayerScene);
-            SinglePlayerWindow.show();
+            fxmlLoader.setControllerFactory( c -> new GameFrameControllerSinglePlayer(container));
+            Scene singlePlayerScene = new Scene(fxmlLoader.load());
+            Stage singlePlayerWindow = new Stage();
+            singlePlayerWindow.setTitle("Single Player");
+            singlePlayerWindow.setScene(singlePlayerScene);
+            singlePlayerWindow.show();
+            container.setLevelSwitcherScene(singlePlayerScene);
+            container.setGameFrameControllerSinglePlayer(fxmlLoader.getController());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -32,8 +33,8 @@ public class LevelsSwitcherController {
     }
 
     public void onMenuButtonClick(){
-        GamePanel.LevelsSwitcher.hide();
-        SuperSnake.GamePanelWindow.show();
-        snakeDecoration.startSnakes();
+        container.getLevelSwitcher().hide();
+        container.getGamePanelWindow().show();
+        container.getSnakeDecoration().startSnakes();
     }
 }
