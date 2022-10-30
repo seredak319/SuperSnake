@@ -3,6 +3,7 @@ package com.example.snakegamefx;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
@@ -26,44 +27,39 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     @FXML
     private Pane paneSpawn;
     @FXML
-    private Pane paneBadSnakes;
+    protected Pane paneBadSnakes;
     @FXML
-    private Label bulletsAmount;
+    protected Label bulletsAmount;
     @FXML
-    private Label pointsAmount;
+    Label pointsAmount;
     @FXML
-    private ProgressBar progressBar;
+    ProgressBar progressBar;
     @FXML
     private Label time;
     @FXML
     private ImageView finishImage;
-
+    @FXML
+    private Button backToMenu;
     private final Container container;
-
-    private Snake snake;
-    private BadSnake badSnake;
-    private Shoot shoot;
-    private int points = 0;
-    private double progress = 0;
+    Snake snake;
+    BadSnake badSnake;
+    Shoot shoot;
+    int points = 0;
+    double progress = 0;
     public long start;
-    private boolean justFinished = false;
+    boolean justFinished = false;
+    boolean running = false;
 
     GameFrameControllerSinglePlayer(Container container){
         this.container = container;
     }
 
-    private void startBadSnakes(){
+    public void startBadSnakes(){
         badSnake.newBadSnake("Right");
         badSnake.newBadSnake("Left");
         badSnake.newBadSnakeRandomDirection();
-      //  badSnake.newBadSnake("Up");
-       // badSnake.newBadSnake("Down");
-        //badSnake.newBadSnake("Up");
-        //badSnake.newBadSnakeRandomDirection();
-        //badSnake.newBadSnakeRandomDirection();
-       // badSnake.newBadSnakeRandomDirection();
         badSnake.startSnakes();
-       // badSnake.start();
+        start = System.nanoTime();
     }
 
     public void addPoints(){
@@ -74,13 +70,12 @@ public class GameFrameControllerSinglePlayer implements Initializable {
             progressBar.setProgress(progress);
 
         });
-
         if(points >= 2){
             finishTheGame();
         }
     }
 
-    private void resetLevel(){
+    public void resetLevel(){
         shoot.setAmmo(500);
         points = 0;
         progress = 0;
@@ -93,6 +88,7 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     }
 
     public void finishTheGame(){
+        running = false;
         justFinished = true;
         long end = System.nanoTime();
         double timeElapsed = (double) (end - start)/1_000_000_000;
@@ -104,7 +100,7 @@ public class GameFrameControllerSinglePlayer implements Initializable {
         showFinishedScreen();
     }
 
-    private void showFinishedScreen(){
+    public void showFinishedScreen(){
         finishImage = new ImageView(Objects.requireNonNull(getClass().getResource("img/zdjece.JPG")).toExternalForm());
         finishImage.setFitHeight(600);
         finishImage.setFitWidth(600);
@@ -112,31 +108,38 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     }
 
     public void onButtonClickMenu(){
-        container.getLevelSwitcher().hide();
+        backToMenu.getScene().getWindow().hide();
         container.getLevelSwitcher().show();
         snake.setRunning(false);
         badSnake.setRunning(false);
+    }
+
+    private void start(){
+        if(!snake.isRunning() && !justFinished) {
+            running = true;
+            System.out.println("ENTER, stands for start");
+            snake.startSnake();
+            startBadSnakes();
+        }
+        if(!snake.isRunning() && justFinished){
+            running = true;
+            resetLevel();
+            justFinished = false;
+            System.out.println("Great! Try to improve your time!");
+            snake.resetOrInitLevel();
+            badSnake.resetOrInitLevel();
+            snake.startSnake();
+            startBadSnakes();
+        }
     }
 
     public void keyboardMoves() {
         container.getLevelSwitcherScene().setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case SHIFT -> {
-                    if(!snake.isRunning() && !justFinished) {
-                        System.out.println("ENTER, stands for start");
-                        snake.startSnake();
-                        startBadSnakes();
-                        start = System.nanoTime();
-                    }
-                    if(!snake.isRunning() && justFinished){
-                        resetLevel();
-                        justFinished = false;
-                        System.out.println("Great! Try to improve your time!");
-                        snake.resetOrInitLevel();
-                        badSnake.resetOrInitLevel();
-                        snake.startSnake();
-                        startBadSnakes();
-                        start = System.nanoTime();
+                    if(!running){
+                        start();
+                        running = true;
                     }
                 }
                 case A -> {
@@ -187,18 +190,6 @@ public class GameFrameControllerSinglePlayer implements Initializable {
             Line line = new Line(i* size,0,i* size, height);
             paneBackGround.getChildren().add(line);
         }
-//        FXMLLoader fxmlLoader = new FXMLLoader();
-//        try {
-//            FXMLLoader.load(Objects.requireNonNull(getClass().getResource("GameFrameSinglePlayer.fxml")));
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-////        try {
-////            Pane p = fxmlLoader.load(Objects.requireNonNull(getClass().getResource("src/main/resources/com/example/snakegamefx/GameFrameSinglePlayer.fxml")).openStream());
-////        } catch (IOException e) {
-////            throw new RuntimeException(e);
-////        }
-//        GameFrameControllerSinglePlayer controller = fxmlLoader.getController();
         badSnake = new BadSnake(paneBadSnakes,container);
         shoot = new Shoot(size,paneShoot,paneSpawn, bulletsAmount,badSnake);
         snake = new Snake(paneSnake, shoot, size);

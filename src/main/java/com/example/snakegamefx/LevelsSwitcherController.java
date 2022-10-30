@@ -21,7 +21,25 @@ public class LevelsSwitcherController {
             fxmlLoader.setControllerFactory( c -> new GameFrameControllerSinglePlayer(container));
             Scene singlePlayerScene = new Scene(fxmlLoader.load());
             Stage singlePlayerWindow = new Stage();
-            singlePlayerWindow.setTitle("Single Player");
+            singlePlayerWindow.setTitle("Time challenge");
+            singlePlayerWindow.setScene(singlePlayerScene);
+            singlePlayerWindow.show();
+            container.setLevelSwitcherScene(singlePlayerScene);
+            container.setGameFrameControllerSinglePlayer(fxmlLoader.getController());
+            container.setTimeChallenge(singlePlayerWindow);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void onLevelOneClick(){
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("LevelOne.fxml"));
+            fxmlLoader.setControllerFactory( c -> new LevelOne(container));
+            Scene singlePlayerScene = new Scene(fxmlLoader.load());
+            Stage singlePlayerWindow = new Stage();
+            singlePlayerWindow.setTitle("Level 1");
             singlePlayerWindow.setScene(singlePlayerScene);
             singlePlayerWindow.show();
             container.setLevelSwitcherScene(singlePlayerScene);
