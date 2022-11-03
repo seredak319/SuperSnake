@@ -1,9 +1,7 @@
 package com.example.snakegamefx;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.io.IOException;
 
@@ -27,6 +25,7 @@ public class LevelsSwitcherController {
             container.setLevelSwitcherScene(singlePlayerScene);
             container.setGameFrameControllerSinglePlayer(fxmlLoader.getController());
             container.setTimeChallenge(singlePlayerWindow);
+            container.getTimeChallenge().setOnCloseRequest(event -> container.getGameFrameControllerSinglePlayer().running = false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -44,6 +43,9 @@ public class LevelsSwitcherController {
             singlePlayerWindow.show();
             container.setLevelSwitcherScene(singlePlayerScene);
             container.setGameFrameControllerSinglePlayer(fxmlLoader.getController());
+            container.setLevelOne(fxmlLoader.getController());
+            container.setLevelOneStage(singlePlayerWindow);
+            container.getLevelOneStage().setOnCloseRequest(event -> container.getGameFrameControllerSinglePlayer().running = false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -7,7 +7,11 @@ public class Container {
 
     private GameFrameControllerSinglePlayer gameFrameControllerSinglePlayer;
 
+    private LevelOne levelOne;
+
     private Stage GamePanelWindow;
+
+    private Stage levelOneStage;
 
     private SnakeDecoration snakeDecoration;
 
@@ -16,6 +20,15 @@ public class Container {
     private Scene LevelSwitcherScene;
 
     private Stage timeChallenge;
+
+    private Shoot shoot;
+    private BadSnake badSnake;
+    private Obstacles obstacles;
+
+    private Snake snake;
+
+
+    private Boss boss;
 
     public Scene getLevelSwitcherScene() {
         return LevelSwitcherScene;
@@ -71,6 +84,64 @@ public class Container {
         if(notSetYet(timeChallenge))
         this.timeChallenge = timeChallenge;
     }
+
+    public Stage getLevelOneStage() {
+        return levelOneStage;
+    }
+
+    public void setLevelOneStage(Stage levelOneStage) {
+        if(notSetYet(levelOneStage))
+        this.levelOneStage = levelOneStage;
+    }
+
+    public LevelOne getLevelOne() {
+        return levelOne;
+    }
+
+    public void setLevelOne(LevelOne levelOne) {
+        this.levelOne = levelOne;
+    }
+
+    public Shoot getShoot() {
+        return shoot;
+    }
+
+    public void setShoot(Shoot shoot) {
+        this.shoot = shoot;
+    }
+
+    public BadSnake getBadSnake() {
+        return badSnake;
+    }
+
+    public void setBadSnake(BadSnake badSnake) {
+        this.badSnake = badSnake;
+    }
+
+    public Obstacles getObstacles() {
+        return obstacles;
+    }
+
+    public void setObstacles(Obstacles obstacles) {
+        this.obstacles = obstacles;
+    }
+
+    public Snake getSnake() {
+        return snake;
+    }
+
+    public void setSnake(Snake snake) {
+        this.snake = snake;
+    }
+
+    public Boss getBoss() {
+        return boss;
+    }
+
+    public void setBoss(Boss boss) {
+        this.boss = boss;
+    }
+
 
 
 

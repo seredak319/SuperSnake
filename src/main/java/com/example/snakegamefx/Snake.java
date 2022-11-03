@@ -11,20 +11,20 @@ import static java.lang.Thread.sleep;
 public class Snake{
 
     private final Pane paneSnake;
-    private String currentDirection;
-    private final int bodyParts = 4;
+    String currentDirection;
+    int bodyParts = 4;
     private final int DELAY = 140;
-    private int[] x;
-    private int[] y;
-    private final int size;
-    private boolean running = false;
-    private final Shoot shoot;
-    private Thread threadSnake;
+    protected int[] x;
+    protected int[] y;
+    protected final int size;
+    protected boolean running = false;
+    public Thread threadSnake;
+    private final Container container;
 
 
-    public Snake(Pane paneSnake, Shoot shoot, int size){
+    public Snake(Pane paneSnake, Container container, int size){
         this.paneSnake = paneSnake;
-        this.shoot = shoot;
+        this.container = container;
         this.size = size;
         resetOrInitLevel();
         paintSnake();
@@ -94,7 +94,7 @@ public class Snake{
             }
         });
         threadSnake.start();
-        shoot.spawnAmmo();
+        container.getShoot().spawnAmmo();
     }
 
     private void moveSnake(){
@@ -115,12 +115,39 @@ public class Snake{
     }
 
     private void checkCollisionsAmmo(){
-        if(!shoot.getSpawnedAmmo())
+        if(getSnakeHeadX() < 0 || getSnakeHeadX() > 27*size || getSnakeHeadY() < 0 || getSnakeHeadY() > 22*size){
+            if(container.getSnake() != null)
+                container.getSnake().setRunning(false);
+            if(container.getBadSnake() != null)
+            container.getBadSnake().setRunning(false);
+            if(container.getShoot() != null)
+            container.getShoot().clearSpawnedAmmo();
+            if( container.getObstacles() != null){
+                container.getObstacles().setRunning(false);
+                container.getObstacles().stopMakingObstaclesMoving();
+            }
+
+            if(container.getGameFrameControllerSinglePlayer() != null){
+                container.getGameFrameControllerSinglePlayer().justFinished = true;
+                container.getGameFrameControllerSinglePlayer().running = false;
+                container.getGameFrameControllerSinglePlayer().showFinishedScreen();
+
+            }
+
+            if(container.getBoss() != null){
+                container.getBoss().setRunning(false);
+            }
+
+
+        }
+
+
+        if(!container.getShoot().getSpawnedAmmo())
             return;
 
-        if(x[bodyParts-1] == shoot.getXOfSpawnedAmmo() && y[bodyParts-1] == shoot.getYOfSpawnedAmmo()){
-            shoot.addAmmo();
-            shoot.spawnAmmo();
+        if(x[bodyParts-1] == container.getShoot().getXOfSpawnedAmmo() && y[bodyParts-1] == container.getShoot().getYOfSpawnedAmmo()){
+            container.getShoot().addAmmo();
+            container.getShoot().spawnAmmo();
         }
     }
 
@@ -148,4 +175,7 @@ public class Snake{
     public int getSnakeHeadY(){
         return y[bodyParts-1];
     }
+
+    public int getSnakeX(int i) { return x[i];}
+    public int getSnakeY(int i) { return y[i];}
 }

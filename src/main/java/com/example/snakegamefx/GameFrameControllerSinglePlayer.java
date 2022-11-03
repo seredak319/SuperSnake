@@ -9,6 +9,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
+import javafx.stage.WindowEvent;
 
 import java.net.URL;
 import java.util.*;
@@ -21,11 +22,11 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     @FXML
     private Pane paneBackGround;
     @FXML
-    private Pane paneSnake;
+    protected Pane paneSnake;
     @FXML
-    private Pane paneShoot;
+    protected Pane paneShoot;
     @FXML
-    private Pane paneSpawn;
+    protected Pane paneSpawn;
     @FXML
     protected Pane paneBadSnakes;
     @FXML
@@ -66,11 +67,11 @@ public class GameFrameControllerSinglePlayer implements Initializable {
         points++;
         Platform.runLater(() -> {
             pointsAmount.setText(Integer.toString(points));
-            progress += 0.1;
+            progress += 0.05;
             progressBar.setProgress(progress);
 
         });
-        if(points >= 2){
+        if(points >= 3){
             finishTheGame();
         }
     }
@@ -112,9 +113,10 @@ public class GameFrameControllerSinglePlayer implements Initializable {
         container.getLevelSwitcher().show();
         snake.setRunning(false);
         badSnake.setRunning(false);
+        running = false;
     }
 
-    private void start(){
+    private void startGame(){
         if(!snake.isRunning() && !justFinished) {
             running = true;
             System.out.println("ENTER, stands for start");
@@ -129,6 +131,7 @@ public class GameFrameControllerSinglePlayer implements Initializable {
             snake.resetOrInitLevel();
             badSnake.resetOrInitLevel();
             snake.startSnake();
+            shoot.clearSpawnedAmmo();
             startBadSnakes();
         }
     }
@@ -138,7 +141,7 @@ public class GameFrameControllerSinglePlayer implements Initializable {
             switch (e.getCode()) {
                 case SHIFT -> {
                     if(!running){
-                        start();
+                        startGame();
                         running = true;
                     }
                 }
@@ -172,6 +175,17 @@ public class GameFrameControllerSinglePlayer implements Initializable {
         });
     }
 
+    public void init(){
+        int size = 25;
+        badSnake = new BadSnake(paneBadSnakes,container);
+        shoot = new Shoot(size,paneShoot,paneSpawn, bulletsAmount,badSnake, container);
+        snake = new Snake(paneSnake, container, size);
+        container.setBadSnake(badSnake);
+        container.setShoot(shoot);
+        container.setSnake(snake);
+        bulletsAmount.setText(Integer.toString(shoot.getAmmo()));
+        pointsAmount.setText(Integer.toString(0));
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -190,10 +204,6 @@ public class GameFrameControllerSinglePlayer implements Initializable {
             Line line = new Line(i* size,0,i* size, height);
             paneBackGround.getChildren().add(line);
         }
-        badSnake = new BadSnake(paneBadSnakes,container);
-        shoot = new Shoot(size,paneShoot,paneSpawn, bulletsAmount,badSnake);
-        snake = new Snake(paneSnake, shoot, size);
-        bulletsAmount.setText(Integer.toString(shoot.getAmmo()));
-        pointsAmount.setText(Integer.toString(0));
+        init();
     }
 }

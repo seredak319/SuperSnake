@@ -5,7 +5,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.util.Random;
 
 import static java.lang.Thread.sleep;
 
@@ -15,17 +14,19 @@ public class Obstacles {
     private final int size = 25;
     private final int tableSizeHorizontal = 27;
     private final int tableSizeVertical = 22;
-    private final int gapTime = 500; // time of delay between every move ov obstacles in certain direction.
+    private final int gapTime = 250; // time of delay between every move ov obstacles in certain direction.
     private final String direction = "Right";
     private int n; // number of squares to be moved, depend on obstacle's type.
     private int[] x;
     private int[] y;
-    private final int maxObstacles = 20;
+    private final int maxObstacles = 100;
     private Thread threadObstacles;
     private boolean running = false;
+    private final Container container;
 
-    Obstacles(Pane pane){
+    Obstacles(Pane pane, Container container){
         this.paneObstacles = pane;
+        this.container = container;
         if(pane == null){
             System.exit(2137);
         }
@@ -61,12 +62,15 @@ public class Obstacles {
         xPos *=size;
         yPos *=size;
 
-        x[n++] = xPos - size; //n
+        x[n] = xPos - size; //n
         y[n] = yPos;
-        x[n++] = xPos; // n+1
+        n++;
+        x[n] = xPos; // n+1
         y[n] = yPos;
-        x[n++] = xPos; // n+2
+        n++;
+        x[n] = xPos; // n+2
         y[n] = yPos + size;
+        n++;
     }
 
     //............
@@ -76,8 +80,30 @@ public class Obstacles {
     //............
     public void addObstacleType3(int xPos, int yPos){ // single square
 
-        x[n++] = xPos*size;
-        y[n++] = yPos*size;
+        x[n] = xPos*size;
+        y[n] = yPos*size;
+        n++;
+    }
+
+    //............
+    //
+    //   [x,y][][]
+    //
+    //............
+    public void addObstacleType4(int xPos, int yPos){
+
+        xPos *=size;
+        yPos *=size;
+
+        x[n] = xPos;
+        y[n] = yPos;
+        n++;
+        x[n] = xPos - size;
+        y[n] = yPos;
+        n++;
+        x[n] = xPos - 2*size;
+        y[n] = yPos;
+        n++;
     }
 
     public void makeObstaclesMove(){
@@ -92,6 +118,9 @@ public class Obstacles {
                     System.out.println("Sleep was interrupted!");
                 }
             }
+            Platform.runLater((() -> {
+                paneObstacles.getChildren().clear();
+            }));
             System.out.println("SnakeDecoration: thread exited;");
         });
         threadObstacles.start();
@@ -103,18 +132,21 @@ public class Obstacles {
         n = 0;
         x = new int[maxObstacles];
         y = new int[maxObstacles];
-        try {
-            threadObstacles.join();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        if(threadObstacles != null){
+            try {
+                threadObstacles.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
+
 
     }
 
     private void moveObstacles(String direction){
         if( direction.equals("Right")){
             for(int i =0; i<n; i++){
-               // checkCollisionOfObstacles(i);
+                checkCollisionOfObstacles(i);
                 x[i] -= size;
             }
         }
@@ -137,28 +169,41 @@ public class Obstacles {
     }
 
     private void checkCollisionOfObstacles(int i){
-        if(x[i] < 0 || x[i] > tableSizeVertical*size || y[i] > tableSizeVertical* size || y[i] < 0){ // obstacle goes of from range of table
-            for(int j =i; j+1<n; j++){
-                x[j] = x[j+1];
-            }
+        if(x[i] < 0 ){ // obstacle goes of from range of table
             n--;
+                x[i] = x[n];
+                y[i] = y[n];
 
-//            Random random = new Random();
-//            int drawnNum = random.nextInt(0,4);
-//            System.out.println(drawnNum);
-//            int y = random.nextInt(1,22);
-//            System.out.println(y);
-//            if(drawnNum == 1){
-//                addObstacleType1(27,y);
-//            }
-//            if(drawnNum == 2){
-//                addObstacleType2(27,y);
-//            }
-//            if(drawnNum == 3){
-//                addObstacleType3(27,y);
-//            }
+                return;
 
+
+        }
+
+        for(int p =0; p<n; p++){
+            if(x[p] == container.getSnake().getSnakeHeadX() && y[p] == container.getSnake().getSnakeHeadY()){
+                System.out.println("Uderzyles w sciane");
+                Platform.runLater((() -> {
+                    paneObstacles.getChildren().clear();
+                }));
+                container.getShoot().clearSpawnedAmmo();
+                running =false;
+                container.getBadSnake().setRunning(false);
+                container.getSnake().setRunning(false);
+                container.getLevelOne().running = false;
+                container.getLevelOne().justFinished = true;
+                container.getGameFrameControllerSinglePlayer().showFinishedScreen();
+
+
+                return;
+            }
         }
     }
 
+    public int getN() {
+        return n;
+    }
+
+    public void setRunning(boolean b){
+        running = b;
+    }
 }

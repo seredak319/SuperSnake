@@ -29,14 +29,17 @@ public class Shoot {
     private final BadSnake badSnake;
     private final int bodyParts =4;
     private Thread thread;
+    private Container container;
+    private boolean bossFight = false;
 
 
-    Shoot(int size, Pane paneShoot, Pane paneSpawn, Label bulletsAmount, BadSnake badSnake){
+    Shoot(int size, Pane paneShoot, Pane paneSpawn, Label bulletsAmount, BadSnake badSnake,Container container){
         this.size = size;
         this.paneShoot = paneShoot;
         this.paneSpawn = paneSpawn;
         this.bulletsAmount = bulletsAmount;
         this.badSnake = badSnake;
+        this.container = container;
         ammo = START_VALUE;
     }
 
@@ -130,6 +133,15 @@ public class Shoot {
                             badSnake.killSingleBadSnake(j);
                             killShooting();
                         }
+                    if(bossFight){
+                        for(int i =0; i < container.getBoss().bodyParts; i++){
+                            if(shootX == container.getBoss().getSnakeX(i) && shootY == container.getBoss().getSnakeY(i)){
+                                container.getBoss().hitBoss();
+                                killShooting();
+                                return;
+                            }
+                        }
+                    }
                 }
                 case "Left" -> {
                     if (shootY == badSnake.getStartY(j))
@@ -138,6 +150,15 @@ public class Shoot {
                             badSnake.killSingleBadSnake(j);
                             killShooting();
                         }
+                    if(bossFight){
+                        for(int i =0; i < container.getBoss().bodyParts; i++){
+                            if(shootX == container.getBoss().getSnakeX(i) && shootY == container.getBoss().getSnakeY(i)){
+                                container.getBoss().hitBoss();
+                                killShooting();
+                                return;
+                            }
+                        }
+                    }
                 }
                 case "Up" -> {
                     if (shootX == badSnake.getStartX(j))
@@ -146,6 +167,15 @@ public class Shoot {
                             badSnake.killSingleBadSnake(j);
                             killShooting();
                         }
+                    if(bossFight){
+                        for(int i =0; i < container.getBoss().bodyParts; i++){
+                            if(shootX == container.getBoss().getSnakeX(i) && shootY == container.getBoss().getSnakeY(i)){
+                                container.getBoss().hitBoss();
+                                killShooting();
+                                return;
+                            }
+                        }
+                    }
                 }
                 case "Down" -> {
                     if (shootX == badSnake.getStartX(j))
@@ -154,6 +184,15 @@ public class Shoot {
                             badSnake.killSingleBadSnake(j);
                             killShooting();
                         }
+                    if(bossFight){
+                        for(int i =0; i < container.getBoss().bodyParts; i++){
+                            if(shootX == container.getBoss().getSnakeX(i) && shootY == container.getBoss().getSnakeY(i)){
+                                container.getBoss().hitBoss();
+                                killShooting();
+                                return;
+                            }
+                        }
+                    }
                 }
             }
     }
@@ -211,6 +250,12 @@ public class Shoot {
     public void setAmmo(int ammo) {
         this.ammo = ammo;
     }
+
+    public void setBossFight(boolean bossFight) {
+        this.bossFight = bossFight;
+    }
+
+
 
 
 }
