@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane onKeyPressed="#keyboardMoves" opacity="0.5" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.snakegamefx.LevelTwo">
+   <children>
+      <Pane fx:id="finishPane" prefHeight="575.0" prefWidth="700.0" />
+      <Pane fx:id="paneBackGround" opacity="0.59" prefHeight="575.0" prefWidth="700.0" style="-fx-background-color: grey;" />
+      <Pane fx:id="paneSnake" focusTraversable="true" prefHeight="575.0" prefWidth="700.0" />
+      <Pane fx:id="paneShoot" prefHeight="575.0" prefWidth="700.0" />
+      <Pane fx:id="paneObstacles" prefHeight="575.0" prefWidth="700.0" />
+      <Pane fx:id="paneSpawn" prefHeight="575.0" prefWidth="700.0" />
+      <Pane fx:id="paneBoss" prefHeight="575.0" prefWidth="700.0" />
+      <Pane fx:id="paneBossShoot" prefHeight="575.0" prefWidth="700.0" />
+      <ImageView fx:id="finishImage" fitHeight="575.0" fitWidth="700.0" pickOnBounds="true" preserveRatio="true" />
+      <Pane fx:id="paneBadSnakes" prefHeight="575.0" prefWidth="700.0">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets></Pane>
+      <Pane layoutY="574.0" prefHeight="125.0" prefWidth="700.0">
+         <children>
+            <ProgressBar fx:id="progressBar" layoutX="176.0" layoutY="46.0" prefHeight="25.0" prefWidth="368.0" progress="0.0" />
+            <Label fx:id="pointsAmount" alignment="CENTER" layoutX="14.0" layoutY="38.0" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: GREY; -fx-border-color: BLACK;">
+               <font>
+                  <Font name="Verdana" size="25.0" />
+               </font>
+            </Label>
+            <Label fx:id="labelTitle" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="104.0" text="Killed snakes:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+         </children></Pane>
+      <Button fx:id="backToMenu" blendMode="EXCLUSION" cancelButton="true" focusTraversable="false" layoutX="14.0" layoutY="661.0" mnemonicParsing="false" onAction="#onButtonClickMenu" text="menu" textOverrun="CLIP" />
+      <ImageView fitHeight="78.0" fitWidth="86.0" layoutX="577.0" layoutY="582.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@img/imgBULLET.png" />
+         </image></ImageView>
+      <Label fx:id="bulletsAmount" alignment="CENTER" layoutX="588.0" layoutY="665.0" prefHeight="25.0" prefWidth="56.0" style="-fx-background-color: grey; -fx-border-color: black;">
+         <font>
+            <Font name="Verdana" size="25.0" />
+         </font></Label>
+   </children>
+</AnchorPane>

@@ -3,8 +3,10 @@ package com.example.snakegamefx;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -33,11 +35,12 @@ public class SuperSnake extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(SuperSnake.class.getResource("GamePanel.fxml"));
         fxmlLoader.setControllerFactory( c -> new GamePanel(container));
         Scene gamePanelScene = new Scene(fxmlLoader.load());
-        stage.setTitle("Hello!");
+        stage.setTitle("Super Snake!");
         stage.setScene(gamePanelScene);
         stage.setResizable(false);
         stage.setOpacity(0.95);
         stage.show();
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("img/icon.png")).toString()));
 
         container.setGamePanelWindow(stage);
     }

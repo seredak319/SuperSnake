@@ -8,24 +8,26 @@ import javafx.scene.shape.Rectangle;
 import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 
-public class Boss {
-
+public class Boss<T extends GameFrameControllerSinglePlayer> {
+    private T t;
     private Container container;
     private int size = 25;
     private Pane paneBoss;
     String currentDirection = "Left";
     int bodyParts = 7;
-    private final int DELAY = 300;
+    private final int DELAY;
     private int[] x;
     private int[] y;
     private boolean running = false;
     private Thread threadSnake;
-    private BadSnakesMovementAlgorithm badSnakesMovementAlgorithm;
-    public int healthPoints = 5;
+    private final BadSnakesMovementAlgorithm badSnakesMovementAlgorithm;
+    public int healthPoints = 10;
 
-    Boss(Container container, Pane paneBoss){
+    Boss(Container container, Pane paneBoss, int delay, T t){
         this.container = container;
         this.paneBoss = paneBoss;
+        this.DELAY = delay;
+        this.t = t;
         badSnakesMovementAlgorithm = new BadSnakesMovementAlgorithm(container);
     }
 
@@ -120,8 +122,10 @@ public class Boss {
              running =false;
              container.getBadSnake().setRunning(false);
              container.getSnake().setRunning(false);
-             container.getLevelOne().running = false;
-             container.getLevelOne().justFinished = true;
+             //container.getLevelOne().running = false;
+             //container.getLevelOne().justFinished = true;
+             t.running = false;
+             t.justFinished = true;
              container.getGameFrameControllerSinglePlayer().showFinishedScreen();
         }
     }
@@ -192,7 +196,7 @@ public class Boss {
 
     public void hitBoss(){
         healthPoints--;
-        container.getLevelOne().addPoints();
+        t.addPoints();
     }
 
 

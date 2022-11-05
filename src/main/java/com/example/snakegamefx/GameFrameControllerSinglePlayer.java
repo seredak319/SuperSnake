@@ -9,7 +9,6 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
-import javafx.stage.WindowEvent;
 
 import java.net.URL;
 import java.util.*;
@@ -38,9 +37,11 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     @FXML
     private Label time;
     @FXML
-    private ImageView finishImage;
+    protected ImageView finishImage;
     @FXML
     private Button backToMenu;
+    @FXML
+    protected Pane finishPane;
     private final Container container;
     Snake snake;
     BadSnake badSnake;
@@ -71,20 +72,20 @@ public class GameFrameControllerSinglePlayer implements Initializable {
             progressBar.setProgress(progress);
 
         });
-        if(points >= 3){
+        if(points >= 10){
             finishTheGame();
         }
     }
 
     public void resetLevel(){
-        shoot.setAmmo(500);
+        shoot.setAmmo(container.getShoot().START_VALUE);
         points = 0;
         progress = 0;
         Platform.runLater(() -> {
             pointsAmount.setText(Integer.toString(points));
             progressBar.setProgress(progress);
-            time.setText(Double.toString(0.00));
-            bulletsAmount.setText(Integer.toString(500));
+            time.setText("");
+            bulletsAmount.setText(Integer.toString(container.getShoot().START_VALUE));
         });
     }
 
@@ -98,14 +99,25 @@ public class GameFrameControllerSinglePlayer implements Initializable {
         System.out.println("Wow! Your time is: " + (timeElapsed));
         shoot.clearSpawnedAmmo();
         Platform.runLater(() -> time.setText(Double.toString(timeElapsed)));
-        showFinishedScreen();
     }
 
     public void showFinishedScreen(){
-        finishImage = new ImageView(Objects.requireNonNull(getClass().getResource("img/zdjece.JPG")).toExternalForm());
-        finishImage.setFitHeight(600);
-        finishImage.setFitWidth(600);
-        Platform.runLater(() -> paneSnake.getChildren().add(finishImage));
+        finishImage = new ImageView(Objects.requireNonNull(getClass().getResource("img/timeChallengeStartPic.png")).toExternalForm());
+        finishImage.setFitHeight(575);
+        finishImage.setFitWidth(700);
+        Platform.runLater(() -> finishPane.getChildren().add(finishImage));
+    }
+
+    public void hideFinieshedScreen(){
+        finishPane.getChildren().clear();
+    }
+
+    public void showStartScreen(){
+
+    }
+
+    public void hideStartScreen(){
+        finishPane.getChildren().clear();
     }
 
     public void onButtonClickMenu(){
@@ -117,13 +129,16 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     }
 
     private void startGame(){
+       // hideStartScreen();
         if(!snake.isRunning() && !justFinished) {
+           // hideFinieshedScreen();
             running = true;
             System.out.println("ENTER, stands for start");
             snake.startSnake();
             startBadSnakes();
         }
         if(!snake.isRunning() && justFinished){
+           // hideFinieshedScreen();
             running = true;
             resetLevel();
             justFinished = false;
@@ -178,13 +193,17 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     public void init(){
         int size = 25;
         badSnake = new BadSnake(paneBadSnakes,container);
-        shoot = new Shoot(size,paneShoot,paneSpawn, bulletsAmount,badSnake, container);
+        shoot = new Shoot(size,paneShoot,paneSpawn, bulletsAmount,badSnake, container,999);
         snake = new Snake(paneSnake, container, size);
         container.setBadSnake(badSnake);
         container.setShoot(shoot);
         container.setSnake(snake);
         bulletsAmount.setText(Integer.toString(shoot.getAmmo()));
         pointsAmount.setText(Integer.toString(0));
+        finishImage = new ImageView(Objects.requireNonNull(getClass().getResource("img/timeChallengeStartPic.png")).toExternalForm());
+        finishImage.setFitHeight(575);
+        finishImage.setFitWidth(700);
+        Platform.runLater(() -> finishPane.getChildren().add(finishImage));
     }
 
     @Override
@@ -204,6 +223,7 @@ public class GameFrameControllerSinglePlayer implements Initializable {
             Line line = new Line(i* size,0,i* size, height);
             paneBackGround.getChildren().add(line);
         }
+        showStartScreen();
         init();
     }
 }

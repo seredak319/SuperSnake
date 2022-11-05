@@ -2,7 +2,7 @@ package com.example.snakegamefx;
 
 public class BadSnakesMovementAlgorithm {
 
-    private Container container;
+    private final Container container;
     private String currentDirection;
 
     BadSnakesMovementAlgorithm(Container container){

@@ -128,9 +128,10 @@ public class Snake{
             }
 
             if(container.getGameFrameControllerSinglePlayer() != null){
+                container.getGameFrameControllerSinglePlayer().showFinishedScreen();
                 container.getGameFrameControllerSinglePlayer().justFinished = true;
                 container.getGameFrameControllerSinglePlayer().running = false;
-                container.getGameFrameControllerSinglePlayer().showFinishedScreen();
+
 
             }
 

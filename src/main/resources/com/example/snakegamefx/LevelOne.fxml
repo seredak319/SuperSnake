@@ -8,12 +8,13 @@
 
 <AnchorPane onKeyPressed="#keyboardMoves" opacity="0.5" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.snakegamefx.LevelOne">
    <children>
+      <Pane fx:id="finishPane" prefHeight="575.0" prefWidth="700.0" />
       <Pane fx:id="paneBackGround" opacity="0.59" prefHeight="575.0" prefWidth="700.0" style="-fx-background-color: grey;" />
-      <Pane fx:id="paneSnake" focusTraversable="true" prefHeight="575.0" prefWidth="700.0" />
       <Pane fx:id="paneShoot" prefHeight="575.0" prefWidth="700.0" />
       <Pane fx:id="paneObstacles" prefHeight="575.0" prefWidth="700.0" />
       <Pane fx:id="paneSpawn" prefHeight="575.0" prefWidth="700.0" />
       <Pane fx:id="paneBoss" prefHeight="575.0" prefWidth="700.0" />
+      <Pane fx:id="paneSnake" focusTraversable="true" prefHeight="575.0" prefWidth="700.0" />
       <Pane fx:id="paneBadSnakes" prefHeight="575.0" prefWidth="700.0">
          <opaqueInsets>
             <Insets />

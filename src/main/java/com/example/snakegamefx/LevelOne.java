@@ -3,8 +3,10 @@ package com.example.snakegamefx;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
+import java.util.Objects;
 import java.util.Random;
 
 import static java.lang.Thread.sleep;
@@ -21,7 +23,6 @@ public class LevelOne extends GameFrameControllerSinglePlayer{
     private Obstacles obstacles;
     private final Container container;
     private Boss boss;
-  //  private BossAlgorithm bossAlgorithm;
 
     LevelOne(Container container)
     {
@@ -45,14 +46,15 @@ public class LevelOne extends GameFrameControllerSinglePlayer{
                 int y;
                 int timeGapBetweenObstacles;
 
-                howManyObstacles = random.nextInt(1,3);
-                gapTime = random.nextInt(3,5);
-                timeGapBetweenObstacles = random.nextInt(1,5);
+                howManyObstacles = random.nextInt(1,5);
+                gapTime = random.nextInt(1,3);
+                timeGapBetweenObstacles = random.nextInt(1,3);
 
                 for(int i = 0; i< howManyObstacles;i++){
                     y = random.nextInt(0,21);
-                    xGapBetweenObstacles = random.nextInt(3,7);
+                    xGapBetweenObstacles = random.nextInt(1,7);
                     witchObstacle = random.nextInt(1,5);
+                    System.out.println("witchObstacle: " + witchObstacle);
                     switch (witchObstacle){
                         case 1 -> obstacles.addObstacleType1(30+xGapBetweenObstacles,y);
                         case 2 -> obstacles.addObstacleType2(30+xGapBetweenObstacles,y);
@@ -81,11 +83,16 @@ public class LevelOne extends GameFrameControllerSinglePlayer{
 
     @Override
     public void startBadSnakes() {
+        int bossDelay = 300;
+        boss = new Boss<>(container,paneBoss,bossDelay,container.getLevelOne());
+        boss.resetOrInitLevel();
+        container.setBoss(boss);
         badSnake.newBadSnake("Right");
         badSnake.newBadSnake("Left");
         badSnake.newBadSnakeRandomDirection();
         badSnake.startSnakes();
-        obstacles = new Obstacles(paneObstacles, container);
+        int obstaclesDelay = 250;
+        obstacles = new Obstacles(paneObstacles, container, obstaclesDelay);
         addObstaclesToBackGround();
         container.setObstacles(obstacles);
         obstacles.makeObstaclesMove();
@@ -93,7 +100,8 @@ public class LevelOne extends GameFrameControllerSinglePlayer{
 
     @Override
     public void resetLevel() {
-        shoot.setAmmo(500);
+        shoot.setAmmo(container.getShoot().START_VALUE);
+        container.getBoss().resetOrInitLevel();
         container.getBoss().healthPoints = 5;
         labelTitle.setText("Killed snakes:");
         points = 0;
@@ -103,7 +111,7 @@ public class LevelOne extends GameFrameControllerSinglePlayer{
         Platform.runLater(() -> {
             pointsAmount.setText(Integer.toString(points));
             progressBar.setProgress(progress);
-            bulletsAmount.setText(Integer.toString(500));
+            bulletsAmount.setText(Integer.toString(container.getShoot().START_VALUE));
             paneObstacles.getChildren().clear();
         });
     }
@@ -111,6 +119,8 @@ public class LevelOne extends GameFrameControllerSinglePlayer{
     @Override
     public void finishTheGame() {
      //   fightTheBoss();
+        snake.setRunning(false);
+        showFinishedScreen();
         running = false;
         container.getObstacles().setRunning(false);
         container.getShoot().clearSpawnedAmmo();
@@ -118,16 +128,14 @@ public class LevelOne extends GameFrameControllerSinglePlayer{
         justFinished = true;
         long end = System.nanoTime();
         double timeElapsed = (double) (end - start)/1_000_000_000;
-        snake.setRunning(false);
         badSnake.setRunning(false);
         System.out.println("Wow! Your time is: " + (timeElapsed));
-        showFinishedScreen();
     }
 
     @Override
     public void addPoints() {
         points++;
-        int n = 5;
+        int n = 3;
         if(points <= n){
             Platform.runLater(() -> {
                 pointsAmount.setText(Integer.toString(points));
@@ -136,7 +144,7 @@ public class LevelOne extends GameFrameControllerSinglePlayer{
 
             });
         }
-        if(points == 5){
+        if(points == n){
             fightTheBoss();
             Platform.runLater(() -> {
                 labelTitle.setText("Boss's HP");
@@ -148,7 +156,7 @@ public class LevelOne extends GameFrameControllerSinglePlayer{
         if(points >= n+1){
             Platform.runLater(() -> {
                 pointsAmount.setText(Integer.toString(container.getBoss().healthPoints));
-                progress += 1.0/n;
+                progress += 1.0/10;
                 progressBar.setProgress(progress);
             });
             if(points == 2*n){
@@ -159,17 +167,27 @@ public class LevelOne extends GameFrameControllerSinglePlayer{
 
     @Override
     public void init() {
+        finishImage = new ImageView(Objects.requireNonNull(getClass().getResource("img/levelOneStartPic.png")).toExternalForm());
+        finishImage.setFitHeight(575);
+        finishImage.setFitWidth(700);
+        Platform.runLater(() -> finishPane.getChildren().add(finishImage));
         int size = 25;
-        boss = new Boss(container,paneBoss);
-        container.setBoss(boss);
         badSnake = new BadSnake(paneBadSnakes,container);
-        shoot = new Shoot(size,paneShoot,paneSpawn, bulletsAmount,badSnake, container);
+        shoot = new Shoot(size,paneShoot,paneSpawn, bulletsAmount,badSnake, container,30);
         snake = new Snake(paneSnake, container, size);
         container.setBadSnake(badSnake);
         container.setShoot(shoot);
         container.setSnake(snake);
         bulletsAmount.setText(Integer.toString(shoot.getAmmo()));
         pointsAmount.setText(Integer.toString(0));
+    }
+
+    @Override
+    public void showFinishedScreen() {
+        finishImage = new ImageView(Objects.requireNonNull(getClass().getResource("img/levelOneStartPic.png")).toExternalForm());
+        finishImage.setFitHeight(575);
+        finishImage.setFitWidth(700);
+        Platform.runLater(() -> finishPane.getChildren().add(finishImage));
     }
 
     private void fightTheBoss(){

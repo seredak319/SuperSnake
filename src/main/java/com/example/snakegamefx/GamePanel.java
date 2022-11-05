@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -41,6 +42,7 @@ public class GamePanel implements Initializable {
             levelsSwitcher.setScene(singlePlayerScene);
             levelsSwitcher.show();
             container.setLevelSwitcher(levelsSwitcher);
+            container.getLevelSwitcher().getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("img/icon.png")).toString()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -77,6 +79,7 @@ public class GamePanel implements Initializable {
         snakeDecoration.newSnakeDecoration("Down");
         snakeDecoration.newSnakeDecoration("Left");
         snakeDecoration.startSnakes();
+
 
     }
 }

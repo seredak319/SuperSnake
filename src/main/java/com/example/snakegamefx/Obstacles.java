@@ -14,7 +14,7 @@ public class Obstacles {
     private final int size = 25;
     private final int tableSizeHorizontal = 27;
     private final int tableSizeVertical = 22;
-    private final int gapTime = 250; // time of delay between every move ov obstacles in certain direction.
+    private final int gapTime; // time of delay between every move ov obstacles in certain direction.
     private final String direction = "Right";
     private int n; // number of squares to be moved, depend on obstacle's type.
     private int[] x;
@@ -24,9 +24,10 @@ public class Obstacles {
     private boolean running = false;
     private final Container container;
 
-    Obstacles(Pane pane, Container container){
+    Obstacles(Pane pane, Container container, int gapTime){
         this.paneObstacles = pane;
         this.container = container;
+        this.gapTime = gapTime;
         if(pane == null){
             System.exit(2137);
         }
@@ -173,10 +174,7 @@ public class Obstacles {
             n--;
                 x[i] = x[n];
                 y[i] = y[n];
-
                 return;
-
-
         }
 
         for(int p =0; p<n; p++){

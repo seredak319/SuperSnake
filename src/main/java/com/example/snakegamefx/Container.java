@@ -26,9 +26,9 @@ public class Container {
     private Obstacles obstacles;
 
     private Snake snake;
-
-
     private Boss boss;
+    private LevelTwo levelTwo;
+    private Stage levelTwoStage;
 
     public Scene getLevelSwitcherScene() {
         return LevelSwitcherScene;
@@ -140,6 +140,23 @@ public class Container {
 
     public void setBoss(Boss boss) {
         this.boss = boss;
+    }
+
+
+    public LevelTwo getLevelTwo() {
+        return levelTwo;
+    }
+
+    public void setLevelTwo(LevelTwo levelTwo) {
+        this.levelTwo = levelTwo;
+    }
+
+    public Stage getLevelTwoStage() {
+        return levelTwoStage;
+    }
+
+    public void setLevelTwoStage(Stage  levelTwoStage) {
+        this.levelTwoStage = levelTwoStage;
     }
 
 

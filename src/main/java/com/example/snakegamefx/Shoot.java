@@ -14,7 +14,7 @@ public class Shoot {
 
     private boolean shot = false;
     private int ammo;
-    private int START_VALUE = 500;
+    int START_VALUE;
     private final int size;
     private String direction;
     private final Pane paneShoot;
@@ -33,13 +33,14 @@ public class Shoot {
     private boolean bossFight = false;
 
 
-    Shoot(int size, Pane paneShoot, Pane paneSpawn, Label bulletsAmount, BadSnake badSnake,Container container){
+    Shoot(int size, Pane paneShoot, Pane paneSpawn, Label bulletsAmount, BadSnake badSnake,Container container,int START_VALUE){
         this.size = size;
         this.paneShoot = paneShoot;
         this.paneSpawn = paneSpawn;
         this.bulletsAmount = bulletsAmount;
         this.badSnake = badSnake;
         this.container = container;
+        this.START_VALUE = START_VALUE;
         ammo = START_VALUE;
     }
 
