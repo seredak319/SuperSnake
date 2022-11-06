@@ -30,6 +30,11 @@ public class Container {
     private LevelTwo levelTwo;
     private Stage levelTwoStage;
 
+    private LevelThree levelThree;
+    private Stage levelThreeStage;
+
+
+
     public Scene getLevelSwitcherScene() {
         return LevelSwitcherScene;
     }
@@ -159,6 +164,22 @@ public class Container {
         this.levelTwoStage = levelTwoStage;
     }
 
+
+    public LevelThree getLevelThree() {
+        return levelThree;
+    }
+
+    public void setLevelThree(LevelThree levelThree) {
+        this.levelThree = levelThree;
+    }
+
+    public Stage getLevelThreeStage() {
+        return levelThreeStage;
+    }
+
+    public void setLevelThreeStage(Stage levelThreeStage) {
+        this.levelThreeStage = levelThreeStage;
+    }
 
 
 

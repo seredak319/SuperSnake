@@ -65,14 +65,15 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     }
 
     public void addPoints(){
+        int n =10;
         points++;
         Platform.runLater(() -> {
             pointsAmount.setText(Integer.toString(points));
-            progress += 0.05;
+            progress += 1/n;
             progressBar.setProgress(progress);
 
         });
-        if(points >= 10){
+        if(points >= n){
             finishTheGame();
         }
     }

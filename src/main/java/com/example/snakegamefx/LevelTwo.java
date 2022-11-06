@@ -37,7 +37,7 @@ public class LevelTwo extends GameFrameControllerSinglePlayer{
     private void addObstaclesToBackGround(){
         System.out.println("Starting obstacles");
         Thread threadAddObstacles = new Thread(() -> {
-            while (this.running) {
+            while (obstacles.isRunning()) {
 
                 System.out.println(obstacles.getN());
 
@@ -49,14 +49,15 @@ public class LevelTwo extends GameFrameControllerSinglePlayer{
                 int y;
                 int timeGapBetweenObstacles;
 
-                howManyObstacles = random.nextInt(1,3);
-                gapTime = random.nextInt(3,5);
-                timeGapBetweenObstacles = random.nextInt(1,5);
+                howManyObstacles = random.nextInt(1,5);
+                gapTime = random.nextInt(1,3);
+                timeGapBetweenObstacles = random.nextInt(1,3);
 
                 for(int i = 0; i< howManyObstacles;i++){
                     y = random.nextInt(0,21);
-                    xGapBetweenObstacles = random.nextInt(3,7);
+                    xGapBetweenObstacles = random.nextInt(1,7);
                     witchObstacle = random.nextInt(1,5);
+                    System.out.println("witchObstacle: " + witchObstacle);
                     switch (witchObstacle){
                         case 1 -> obstacles.addObstacleType1(30+xGapBetweenObstacles,y);
                         case 2 -> obstacles.addObstacleType2(30+xGapBetweenObstacles,y);
@@ -94,7 +95,7 @@ public class LevelTwo extends GameFrameControllerSinglePlayer{
         badSnake.newBadSnakeRandomDirection();
         badSnake.startSnakes();
         int obstaclesDelay = 150;
-        obstacles = new Obstacles(paneObstacles, container, obstaclesDelay);
+        obstacles = new Obstacles<>(paneObstacles, container, obstaclesDelay,container.getLevelTwo());
         addObstaclesToBackGround();
         container.setObstacles(obstacles);
         obstacles.makeObstaclesMove();
@@ -123,7 +124,7 @@ public class LevelTwo extends GameFrameControllerSinglePlayer{
         //   fightTheBoss();
         running = false;
         showFinishedScreen();
-        container.getObstacles().setRunning(false);
+        obstacles.setRunning(false);
         container.getShoot().clearSpawnedAmmo();
         boss.setRunning(false);
         justFinished = true;
@@ -137,7 +138,7 @@ public class LevelTwo extends GameFrameControllerSinglePlayer{
     @Override
     public void addPoints() {
         points++;
-        int n = 3;
+        int n = 10;
         if(points <= n){
             Platform.runLater(() -> {
                 pointsAmount.setText(Integer.toString(points));
@@ -148,7 +149,7 @@ public class LevelTwo extends GameFrameControllerSinglePlayer{
         }
         if(points == n){
             fightTheBoss();
-            bossShoot = new BossShoot(boss,paneBossShoot,container,container.getLevelTwo());
+            bossShoot = new BossShoot<>(boss,paneBossShoot,container,container.getLevelTwo());
             bossShoot.bossShoot();
             Platform.runLater(() -> {
                 labelTitle.setText("Boss's HP");
@@ -200,6 +201,7 @@ public class LevelTwo extends GameFrameControllerSinglePlayer{
         boss.startSnake();
 
         container.getObstacles().setRunning(false);
+        obstacles.setRunning(false);
         badSnake.setRunning(false);
     }
 }

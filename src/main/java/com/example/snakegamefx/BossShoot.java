@@ -16,7 +16,7 @@ public class BossShoot<T extends GameFrameControllerSinglePlayer> {
     private final int range = 11;
     private String currDirection;
     private Thread threadBossShoot;
-    private final int delay = 100;
+    private final int delay = 80;
     private final int size = 25;
     private final Container container;
     private boolean shot;
@@ -70,14 +70,14 @@ public class BossShoot<T extends GameFrameControllerSinglePlayer> {
 
         switch (currDirection) {
             case "Up", "Down" -> {
-                for(int i =0; i<container.getSnake().bodyParts; i++)
+                for(int i =0; i<container.getSnake().bodyParts-1; i++)
                 if(y == container.getSnake().getSnakeY(i)){
                     doBoom();
                     return;
                 }
             }
             case "Left", "Right" -> {
-                for(int i =0; i<container.getSnake().bodyParts; i++)
+                for(int i =0; i<container.getSnake().bodyParts-1; i++)
                 if(x == container.getSnake().getSnakeX(i) ){
                     doBoom();
                     return;
@@ -123,29 +123,35 @@ public class BossShoot<T extends GameFrameControllerSinglePlayer> {
     }
 
     private void checkCollisionWithSnake(){
-        if((container.getSnake().getSnakeHeadY() == y -size || container.getSnake().getSnakeHeadY() == y + size) && container.getSnake().getSnakeHeadX() == x){
-            killSnake();
-        }
+//        if((container.getSnake().getSnakeHeadY() == y -size || container.getSnake().getSnakeHeadY() == y + size) && container.getSnake().getSnakeHeadX() == x){
+//            killSnake();
+//        }
+//
+//        if((container.getSnake().getSnakeHeadX() == x+size || container.getSnake().getSnakeHeadX() == x - size) && container.getSnake().getSnakeHeadY() == y){
+//            killSnake();
+//        }
+//
+//        if(container.getSnake().getSnakeX(3) == x+size && container.getSnake().getSnakeY(3) == y){
+//            killSnake();
+//        }
+//
+//        if(container.getSnake().getSnakeX(3) == x-size && container.getSnake().getSnakeY(3) == y){
+//            killSnake();
+//        }
+//
+//        if(container.getSnake().getSnakeX(3) == x && container.getSnake().getSnakeY(3) == y-size){
+//            killSnake();
+//        }
+//
+//        if(container.getSnake().getSnakeX(3) == x && container.getSnake().getSnakeY(3) == y+size){
+//            killSnake();
+//        }
 
-        if((container.getSnake().getSnakeHeadX() == x+size || container.getSnake().getSnakeHeadX() == x - size) && container.getSnake().getSnakeHeadY() == y){
-            killSnake();
-        }
 
-        if(container.getSnake().getSnakeX(3) == x+size && container.getSnake().getSnakeY(3) == y){
+        if(x >= container.getSnake().getSnakeHeadX() - size && x <= container.getSnake().getSnakeHeadX() + size && y>=container.getSnake().getSnakeHeadY()-size && y<= container.getSnake().getSnakeHeadY() + size )
             killSnake();
-        }
-
-        if(container.getSnake().getSnakeX(3) == x-size && container.getSnake().getSnakeY(3) == y){
+        if(x >= container.getSnake().getSnakeX(2) - size && x <= container.getSnake().getSnakeX(2) + size && y>=container.getSnake().getSnakeY(2)-size && y<= container.getSnake().getSnakeY(2) + size )
             killSnake();
-        }
-
-        if(container.getSnake().getSnakeX(3) == x && container.getSnake().getSnakeY(3) == y-size){
-            killSnake();
-        }
-
-        if(container.getSnake().getSnakeX(3) == x && container.getSnake().getSnakeY(3) == y+size){
-            killSnake();
-        }
     }
 
     private void doBoom(){

@@ -87,6 +87,27 @@ public class LevelsSwitcherController implements Initializable {
         }
     }
 
+    public void onLevelThreeClick(){
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("LevelThree.fxml"));
+            fxmlLoader.setControllerFactory( c -> new LevelThree(container));
+            Scene singlePlayerScene = new Scene(fxmlLoader.load());
+            Stage singlePlayerWindow = new Stage();
+            singlePlayerWindow.setTitle("Level 3");
+            singlePlayerWindow.setScene(singlePlayerScene);
+            singlePlayerWindow.show();
+            container.setLevelSwitcherScene(singlePlayerScene);
+            container.setGameFrameControllerSinglePlayer(fxmlLoader.getController());
+            container.setLevelThree(fxmlLoader.getController());
+            container.setLevelThreeStage(singlePlayerWindow);
+            container.getLevelThreeStage().setOnCloseRequest(event -> container.getGameFrameControllerSinglePlayer().running = false);
+            singlePlayerWindow.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("img/icon.png")).toString()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void onMenuButtonClick(){
         container.getLevelSwitcher().hide();
         container.getGamePanelWindow().show();

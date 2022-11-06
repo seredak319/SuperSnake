@@ -8,7 +8,7 @@ import javafx.scene.shape.Rectangle;
 
 import static java.lang.Thread.sleep;
 
-public class Obstacles {
+public class Obstacles<T extends GameFrameControllerSinglePlayer> {
 
     Pane paneObstacles;
     private final int size = 25;
@@ -23,8 +23,9 @@ public class Obstacles {
     private Thread threadObstacles;
     private boolean running = false;
     private final Container container;
+    private T t;
 
-    Obstacles(Pane pane, Container container, int gapTime){
+    Obstacles(Pane pane, Container container, int gapTime,T t){
         this.paneObstacles = pane;
         this.container = container;
         this.gapTime = gapTime;
@@ -33,6 +34,7 @@ public class Obstacles {
         }
         x = new int[maxObstacles];
         y = new int[maxObstacles];
+        this.t = t;
     }
 
 
@@ -44,6 +46,9 @@ public class Obstacles {
     //
     //............
     public void addObstacleType1(int xPos, int yPos){ // three squares in a row vertically , start x,y is about the lowest square.
+
+        if(n>= maxObstacles)
+            return;
 
         for(int i =n; i<n+3; i++){
             x[i] = xPos*size;
@@ -59,6 +64,9 @@ public class Obstacles {
     //
     //............
     public void addObstacleType2(int xPos, int yPos){ // three squares making curvature
+
+        if(n>= maxObstacles)
+            return;
 
         xPos *=size;
         yPos *=size;
@@ -81,6 +89,9 @@ public class Obstacles {
     //............
     public void addObstacleType3(int xPos, int yPos){ // single square
 
+        if(n>= maxObstacles)
+            return;
+
         x[n] = xPos*size;
         y[n] = yPos*size;
         n++;
@@ -92,6 +103,9 @@ public class Obstacles {
     //
     //............
     public void addObstacleType4(int xPos, int yPos){
+
+        if(n>= maxObstacles)
+            return;
 
         xPos *=size;
         yPos *=size;
@@ -122,7 +136,7 @@ public class Obstacles {
             Platform.runLater((() -> {
                 paneObstacles.getChildren().clear();
             }));
-            System.out.println("SnakeDecoration: thread exited;");
+            System.out.println("Obstacle: thread exited;");
         });
         threadObstacles.start();
     }
@@ -187,8 +201,10 @@ public class Obstacles {
                 running =false;
                 container.getBadSnake().setRunning(false);
                 container.getSnake().setRunning(false);
-                container.getLevelOne().running = false;
-                container.getLevelOne().justFinished = true;
+//                container.getLevelOne().running = false;
+//                container.getLevelOne().justFinished = true;
+                t.running = false;
+                t.justFinished = true;
                 container.getGameFrameControllerSinglePlayer().showFinishedScreen();
 
 
@@ -203,5 +219,9 @@ public class Obstacles {
 
     public void setRunning(boolean b){
         running = b;
+    }
+
+    public boolean isRunning(){
+        return running;
     }
 }
