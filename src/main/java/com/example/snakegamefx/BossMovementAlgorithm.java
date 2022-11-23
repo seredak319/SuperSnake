@@ -1,20 +1,18 @@
 package com.example.snakegamefx;
 
-public class BadSnakesMovementAlgorithm {
+public class BossMovementAlgorithm {
 
     private final Container container;
     private String currentDirection;
 
-    BadSnakesMovementAlgorithm(Container container){
+    BossMovementAlgorithm(Container container){
         this.container = container;
     }
 
     public String setCurrentDirection(int badSnakeX, int badSnakeY) {
-
         // XDDD pozdro tu chodzi o to że Boss będzie wybierał punkt bliżej niego spośród głowy i ostatniej częsci ciała naszego węża, 'algorytm' lepiej działa
         int x = container.getSnake().getSnakeX(3) > container.getSnake().getSnakeHeadX() ? container.getSnake().getSnakeX(3) - badSnakeX : container.getSnake().getSnakeHeadX() - badSnakeX;
         int y = container.getSnake().getSnakeY(3) > container.getSnake().getSnakeHeadY() ? container.getSnake().getSnakeY(3) - badSnakeY : container.getSnake().getSnakeHeadY() - badSnakeY;
-
 
         if(x >= 0 && y >= 0){
             if( x >= y){
@@ -23,7 +21,6 @@ public class BadSnakesMovementAlgorithm {
                 currentDirection = "Down";
             }
         }
-
         if(x>=0 && y<=0){
             if(x>=Math.abs(y)){
                 currentDirection = "Right";
@@ -31,7 +28,6 @@ public class BadSnakesMovementAlgorithm {
                 currentDirection = "Up";
             }
         }
-
         if(x<=0 && y>=0){
             if(Math.abs(x) >= y){
                 currentDirection = "Left";
@@ -39,7 +35,6 @@ public class BadSnakesMovementAlgorithm {
                 currentDirection = "Down";
             }
         }
-
         if(x<=0 && y<=0){
             if(Math.abs(x) >= Math.abs(y)){
                 currentDirection = "Left"; //
@@ -47,7 +42,6 @@ public class BadSnakesMovementAlgorithm {
                 currentDirection = "Up";
             }
         }
-
         return currentDirection;
     }
 }

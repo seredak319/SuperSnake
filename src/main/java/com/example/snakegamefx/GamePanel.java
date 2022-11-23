@@ -17,6 +17,8 @@ import java.util.ResourceBundle;
 public class GamePanel implements Initializable {
 
     @FXML
+    private Button snake;
+    @FXML
     private Pane paneSnakeGamePanel;
     @FXML
     private Button buttonSP;
@@ -24,7 +26,6 @@ public class GamePanel implements Initializable {
     private Button buttonMP;
     private SnakeDecoration snakeDecoration;
     private final Container container;
-
     public GamePanel(Container container) {
         this.container = container;
     }
@@ -38,6 +39,7 @@ public class GamePanel implements Initializable {
             fxmlLoader.setControllerFactory(c -> new LevelsSwitcherController(container));
             Scene singlePlayerScene = new Scene(fxmlLoader.load());
             Stage levelsSwitcher = new Stage();
+            levelsSwitcher.setResizable(false);
             levelsSwitcher.setTitle("Choose level!");
             levelsSwitcher.setScene(singlePlayerScene);
             levelsSwitcher.show();
@@ -46,12 +48,9 @@ public class GamePanel implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
         container.getGamePanelWindow().hide();
         snakeDecoration.setRunning(false);
     }
-
 
     public void addSnake(){
         snakeDecoration.addRandomDecorateSnake();
@@ -63,12 +62,11 @@ public class GamePanel implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Images on buttons (single and multiplayer)
-        ImageView imageSP = new ImageView(Objects.requireNonNull(getClass().getResource("img/impSP.png")).toExternalForm());
+        ImageView imageSP = new ImageView(Objects.requireNonNull(getClass().getResource("img/people.png")).toExternalForm());
         imageSP.setFitHeight(80);
         imageSP.setFitWidth(80);
         buttonSP.setGraphic(imageSP);
-        ImageView imageMP = new ImageView(Objects.requireNonNull(getClass().getResource("img/imgMP.png")).toExternalForm());
+        ImageView imageMP = new ImageView(Objects.requireNonNull(getClass().getResource("img/two-players.png")).toExternalForm());
         imageMP.setFitHeight(80);
         imageMP.setFitWidth(80);
         buttonMP.setGraphic(imageMP);
@@ -79,7 +77,9 @@ public class GamePanel implements Initializable {
         snakeDecoration.newSnakeDecoration("Down");
         snakeDecoration.newSnakeDecoration("Left");
         snakeDecoration.startSnakes();
-
-
+        ImageView imageSnake = new ImageView(Objects.requireNonNull(getClass().getResource("img/snake.png")).toExternalForm());
+        imageSnake.setFitHeight(30);
+        imageSnake.setFitWidth(30);
+        snake.setGraphic(imageSnake);
     }
 }

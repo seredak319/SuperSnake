@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
 import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 
@@ -26,7 +25,7 @@ public class Snake{
         this.paneSnake = paneSnake;
         this.container = container;
         this.size = size;
-        resetOrInitLevel();
+        resetLevel();
         paintSnake();
     }
 
@@ -53,58 +52,58 @@ public class Snake{
         }));
     }
 
-    public void resetOrInitLevel(){
-        if(running) {
-            try {
-                threadSnake.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
+    private void resetLevel(){
         x = new int[bodyParts];
         y = new int[bodyParts];
         currentDirection = "Right";
-
         for(int i=0; i<bodyParts; i++){
             x[i] = size*i;
             y[i] = 0;
         }
     }
 
+    public void killSnake(){
+        Platform.runLater((() -> paneSnake.getChildren().clear()));
+        if(threadSnake!=null){
+            threadSnake.interrupt();
+        }
+        running = false;
+        resetLevel();
+    }
+
     public void startSnake(){
-        running = true;
-        threadSnake = new Thread(() -> {
-            while (running) {
-                moveSnake();
-                try {
-                    sleep(DELAY);
-                } catch (InterruptedException e) {
-                    System.out.println("Sleep was interrupted!");
+        if(!running) {
+            running = true;
+            threadSnake = new Thread(() -> {
+                while (running) {
+                    moveSnake();
+                    try {
+                        sleep(DELAY);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
-            }
-            System.out.println("SnakeDecoration: thread exited;");
-            Platform.runLater((() -> {
-                paneSnake.getChildren().clear();
-            }));
-            try {
-                currentThread().join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        threadSnake.start();
-        container.getShoot().spawnAmmo();
+                System.out.println("SnakeDecoration: thread exited;");
+                Platform.runLater((() -> {
+                    paneSnake.getChildren().clear();
+                }));
+                try {
+                    currentThread().join();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            });
+            threadSnake.start();
+            container.getShoot().spawnAmmo();
+        }
     }
 
     private void moveSnake(){
         checkCollisionsAmmo();
-
         for(int i=0; i < bodyParts -1; i++){
             x[i] = x[i+1];
             y[i] = y[i+1];
         }
-
         switch(currentDirection){
             case "Up" -> y[bodyParts-1] = y[bodyParts-1] - size;
             case "Down" -> y[bodyParts-1] = y[bodyParts-1] + size;
@@ -116,32 +115,9 @@ public class Snake{
 
     private void checkCollisionsAmmo(){
         if(getSnakeHeadX() < 0 || getSnakeHeadX() > 27*size || getSnakeHeadY() < 0 || getSnakeHeadY() > 22*size){
-            if(container.getSnake() != null)
-                container.getSnake().setRunning(false);
-            if(container.getBadSnake() != null)
-            container.getBadSnake().setRunning(false);
-            if(container.getShoot() != null)
-            container.getShoot().clearSpawnedAmmo();
-            if( container.getObstacles() != null){
-                container.getObstacles().setRunning(false);
-                container.getObstacles().stopMakingObstaclesMoving();
-            }
-
-            if(container.getGameFrameControllerSinglePlayer() != null){
-                container.getGameFrameControllerSinglePlayer().showFinishedScreen();
-                container.getGameFrameControllerSinglePlayer().justFinished = true;
-                container.getGameFrameControllerSinglePlayer().running = false;
-
-
-            }
-
-            if(container.getBoss() != null){
-                container.getBoss().setRunning(false);
-            }
-
-
+            container.getGameFrameControllerSinglePlayer().finishTheGame();
+            System.out.println("FINISH THE GAME");
         }
-
 
         if(!container.getShoot().getSpawnedAmmo())
             return;

@@ -6,8 +6,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import java.util.Random;
 
-//todo: źle działa ta redukcja węży
-
 public class SnakeDecoration extends Thread{
 
     private final Pane paneBadSnake;
@@ -111,13 +109,13 @@ public class SnakeDecoration extends Thread{
                 try {
                     sleep(frequency);
                 } catch (InterruptedException e) {
-                    System.out.println("Sleep was interrupted!");
+                    Thread.currentThread().interrupt();
                 }
             }
             try {
                 currentThread().join();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
             System.out.println("SnakeDecoration: thread exited;");
         });
@@ -127,7 +125,6 @@ public class SnakeDecoration extends Thread{
 
 
     private void moveSnakes(){
-
         for(int j=0; j<howManySnakes; j++) {
             for (int i = 0; i < bodyParts - 1; i++) {
                 x[j][i] = x[j][i + 1];

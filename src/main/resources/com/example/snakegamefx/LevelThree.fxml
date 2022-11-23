@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane onKeyPressed="#keyboardMoves" opacity="0.5" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.snakegamefx.LevelThree">
+<AnchorPane onKeyPressed="#keyboardMoves" opacity="0.5" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.snakegamefx.LevelThree">
    <children>
       <Pane fx:id="finishPane" prefHeight="575.0" prefWidth="700.0" />
       <Pane fx:id="paneBackGround" opacity="0.59" prefHeight="575.0" prefWidth="700.0" style="-fx-background-color: grey;" />
@@ -35,7 +35,7 @@
                </font>
             </Label>
          </children></Pane>
-      <Button fx:id="backToMenu" blendMode="EXCLUSION" cancelButton="true" focusTraversable="false" layoutX="14.0" layoutY="661.0" mnemonicParsing="false" onAction="#onButtonClickMenu" text="menu" textOverrun="CLIP" />
+      <Button fx:id="backToMenu" cancelButton="true" focusTraversable="false" layoutX="14.0" layoutY="661.0" mnemonicParsing="false" onAction="#onButtonClickMenu" prefHeight="30.0" prefWidth="30.0" textOverrun="CLIP" />
       <ImageView fitHeight="78.0" fitWidth="86.0" layoutX="577.0" layoutY="582.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@img/imgBULLET.png" />

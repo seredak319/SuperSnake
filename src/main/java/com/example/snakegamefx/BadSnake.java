@@ -5,6 +5,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.util.Objects;
 import java.util.Random;
 
 public class BadSnake extends Thread{
@@ -29,7 +30,7 @@ public class BadSnake extends Thread{
     BadSnake(Pane paneBadSnake, Container container){
         this.paneBadSnake = paneBadSnake;
         this.container = container;
-        resetOrInitLevel();
+        resetLevel();
     }
 
     public void newBadSnake(String direction){
@@ -39,33 +40,26 @@ public class BadSnake extends Thread{
         resetSnake(direction,howManySnakes);
     }
 
-    //todo !!!
     public void killSingleBadSnake(int j){
-        //howManySnakes--;
-
         resetSnake("Right",j+1);
         container.getGameFrameControllerSinglePlayer().addPoints();
-
-       // newBadSnakeRandomDirection();
-//        newBadSnakeRandomDirection();
-//        newBadSnakeRandomDirection();
-
     }
 
-    public void resetOrInitLevel() {
-        if(running){
-            try {
-                threadBadSnakes.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    private void resetLevel() {
         y = new int [maxBadSnakes][bodyParts];
         x = new int [maxBadSnakes][bodyParts];
         startY = new int [maxBadSnakes];
         startX = new int [maxBadSnakes];
         direction = new String[maxBadSnakes];
         howManySnakes = 0;
+    }
+
+    public void killBadSnakes(){
+        if(threadBadSnakes != null){
+            threadBadSnakes.interrupt();
+        }
+        running = false;
+        resetLevel();
     }
 
     public void resetSnake(String direction, int howManySnakesLocal){
@@ -118,23 +112,24 @@ public class BadSnake extends Thread{
             case 4 -> direction[howManySnakes-1] = "Right";
         }
     }
-    public void startSnakes(){
-        running = true;
-        //Initiation of snake
-        threadBadSnakes = new Thread(() -> {
-            while (running) {
-                moveSnakes();
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+    public void startBadSnakes(){
+        if(!running) {
+            running = true;
+            threadBadSnakes = new Thread(() -> {
+                while (running) {
+                    moveSnakes();
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
-            }
-            Platform.runLater((() -> {
-                paneBadSnake.getChildren().clear();
-            }));
-        });
-        threadBadSnakes.start();
+                Platform.runLater((() -> {
+                    paneBadSnake.getChildren().clear();
+                }));
+            });
+            threadBadSnakes.start();
+        }
     }
 
     private void moveSnakes(){
@@ -145,18 +140,10 @@ public class BadSnake extends Thread{
             }
 
             switch (direction[j]) {
-                case "Up" -> {
-                    y[j][bodyParts - 1] = y[j][bodyParts - 1] + size;
-                }
-                case "Down" -> {
-                    y[j][bodyParts - 1] = y[j][bodyParts - 1] - size;
-                }
-                case "Left" -> {
-                    x[j][bodyParts - 1] = x[j][bodyParts - 1] - size;
-                }
-                case "Right" -> {
-                    x[j][bodyParts - 1] = x[j][bodyParts - 1] + size;
-                }
+                case "Up" -> y[j][bodyParts - 1] = y[j][bodyParts - 1] + size;
+                case "Down" -> y[j][bodyParts - 1] = y[j][bodyParts - 1] - size;
+                case "Left" -> x[j][bodyParts - 1] = x[j][bodyParts - 1] - size;
+                case "Right" -> x[j][bodyParts - 1] = x[j][bodyParts - 1] + size;
             }
             checkCollision(j);
             paintSnakes();
@@ -164,14 +151,13 @@ public class BadSnake extends Thread{
     }
 
     private void checkCollision(int j){
-
-        if (y[j][0] == paneBadSnake.getPrefHeight() && direction[j] == "Up")
+        if (y[j][0] == paneBadSnake.getPrefHeight() && Objects.equals(direction[j], "Up"))
             resetSnake(direction[j],j+1);
-        if (y[j][0] == -50 && direction[j] == "Down")
+        if (y[j][0] == -50 && Objects.equals(direction[j], "Down"))
             resetSnake(direction[j],j+1);
-        if (x[j][0] == paneBadSnake.getPrefWidth() && direction[j] == "Right")
+        if (x[j][0] == paneBadSnake.getPrefWidth() && Objects.equals(direction[j], "Right"))
             resetSnake(direction[j],j+1);
-        if (x[j][0] == -50 && direction[j] == "Left")
+        if (x[j][0] == -50 && Objects.equals(direction[j], "Left"))
             resetSnake(direction[j],j+1);
 
     }
@@ -189,7 +175,7 @@ public class BadSnake extends Thread{
                     rectangle.setWidth(size);
                     rectangle.setFill(Color.BLACK);
                     if(checkBorderForUpSnake(j,i))
-                    paneBadSnake.getChildren().add(rectangle);
+                paneBadSnake.getChildren().add(rectangle);
                 }
                 Rectangle rectangleHead = new Rectangle();
                 rectangleHead.setX(x[j][bodyParts-1]);
@@ -198,7 +184,7 @@ public class BadSnake extends Thread{
                 rectangleHead.setWidth(size);
                 rectangleHead.setFill(Color.RED);
                 if(checkBorderForUpSnake(j,bodyParts-1))
-                paneBadSnake.getChildren().add(rectangleHead);
+            paneBadSnake.getChildren().add(rectangleHead);
             }
         }));
     }
@@ -234,5 +220,4 @@ public class BadSnake extends Thread{
     public String getDirection(int j) {
         return direction[j];
     }
-
 }

@@ -60,7 +60,7 @@ public class GameFrameControllerSinglePlayer implements Initializable {
         badSnake.newBadSnake("Right");
         badSnake.newBadSnake("Left");
         badSnake.newBadSnakeRandomDirection();
-        badSnake.startSnakes();
+        badSnake.startBadSnakes();
         start = System.nanoTime();
     }
 
@@ -69,7 +69,7 @@ public class GameFrameControllerSinglePlayer implements Initializable {
         points++;
         Platform.runLater(() -> {
             pointsAmount.setText(Integer.toString(points));
-            progress += 1/n;
+            progress += 1./n;
             progressBar.setProgress(progress);
 
         });
@@ -91,34 +91,27 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     }
 
     public void finishTheGame(){
-        running = false;
-        justFinished = true;
-        long end = System.nanoTime();
-        double timeElapsed = (double) (end - start)/1_000_000_000;
-        snake.setRunning(false);
-        badSnake.setRunning(false);
-        System.out.println("Wow! Your time is: " + (timeElapsed));
-        shoot.clearSpawnedAmmo();
-        Platform.runLater(() -> time.setText(Double.toString(timeElapsed)));
-    }
+        container.getGameFrameControllerSinglePlayer().running = false;
+        container.getGameFrameControllerSinglePlayer().justFinished = true;
+        if(container.getSnake() != null)
+            container.getSnake().killSnake();
 
-    public void showFinishedScreen(){
-        finishImage = new ImageView(Objects.requireNonNull(getClass().getResource("img/timeChallengeStartPic.png")).toExternalForm());
-        finishImage.setFitHeight(575);
-        finishImage.setFitWidth(700);
-        Platform.runLater(() -> finishPane.getChildren().add(finishImage));
-    }
-
-    public void hideFinieshedScreen(){
-        finishPane.getChildren().clear();
-    }
-
-    public void showStartScreen(){
-
-    }
-
-    public void hideStartScreen(){
-        finishPane.getChildren().clear();
+        if(container.getBadSnake() != null){
+            container.getBadSnake().killBadSnakes();
+        }
+        if(container.getObstacles() != null){
+            container.getObstacles().killObstacles();
+        }
+        if(container.getBoss() != null){
+            container.getBoss().killBoss();
+        }
+        if(time !=null){
+            long end = System.nanoTime();
+            double timeElapsed = (double) (end - start)/1_000_000_000;
+            System.out.println("Wow! Your time is: " + (timeElapsed));
+            Platform.runLater(() -> time.setText(Double.toString(timeElapsed)));
+        }
+        container.getShoot().clearSpawnedAmmo();
     }
 
     public void onButtonClickMenu(){
@@ -130,22 +123,17 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     }
 
     private void startGame(){
-       // hideStartScreen();
         if(!snake.isRunning() && !justFinished) {
-           // hideFinieshedScreen();
             running = true;
             System.out.println("ENTER, stands for start");
             snake.startSnake();
             startBadSnakes();
         }
         if(!snake.isRunning() && justFinished){
-           // hideFinieshedScreen();
             running = true;
             resetLevel();
             justFinished = false;
             System.out.println("Great! Try to improve your time!");
-            snake.resetOrInitLevel();
-            badSnake.resetOrInitLevel();
             snake.startSnake();
             shoot.clearSpawnedAmmo();
             startBadSnakes();
@@ -213,18 +201,19 @@ public class GameFrameControllerSinglePlayer implements Initializable {
         int size = 25;
         int row = height / size;
         int width = 700;
-
         for(int i = 0; i< row +1; i++){
             Line line = new Line(0,i* size, width,i* size);
             paneBackGround.getChildren().add(line);
         }
-
         int col = width / size;
         for(int i = 0; i< col; i++){
             Line line = new Line(i* size,0,i* size, height);
             paneBackGround.getChildren().add(line);
         }
-        showStartScreen();
+        ImageView imageBack = new ImageView(Objects.requireNonNull(getClass().getResource("img/reply.png")).toExternalForm());
+        imageBack.setFitHeight(30);
+        imageBack.setFitWidth(30);
+        backToMenu.setGraphic(imageBack);
         init();
     }
 }

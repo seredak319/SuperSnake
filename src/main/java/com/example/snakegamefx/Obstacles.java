@@ -4,37 +4,52 @@ import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
+import java.util.Random;
 
 import static java.lang.Thread.sleep;
 
-public class Obstacles<T extends GameFrameControllerSinglePlayer> {
+public class Obstacles{
 
     Pane paneObstacles;
     private final int size = 25;
-    private final int tableSizeHorizontal = 27;
-    private final int tableSizeVertical = 22;
     private final int gapTime; // time of delay between every move ov obstacles in certain direction.
     private final String direction = "Right";
-    private int n; // number of squares to be moved, depend on obstacle's type.
+    private int n; // number of squares about to be moved, depend on obstacle's type.
     private int[] x;
     private int[] y;
     private final int maxObstacles = 100;
     private Thread threadObstacles;
+    private Thread threadAddObstacles;
     private boolean running = false;
     private final Container container;
-    private T t;
 
-    Obstacles(Pane pane, Container container, int gapTime,T t){
+
+    Obstacles(Pane pane, Container container, int gapTime){
         this.paneObstacles = pane;
         this.container = container;
         this.gapTime = gapTime;
         if(pane == null){
             System.exit(2137);
         }
+        resertObstacles();
+    }
+
+    private void resertObstacles(){
+        n=0;
         x = new int[maxObstacles];
         y = new int[maxObstacles];
-        this.t = t;
+    }
+
+    public void killObstacles(){
+        Platform.runLater((() -> paneObstacles.getChildren().clear()));
+        if(threadObstacles != null){
+            threadObstacles.interrupt();
+        }
+        if(threadAddObstacles !=null) {
+            threadAddObstacles.interrupt();
+        }
+        running = false;
+        resertObstacles();
     }
 
 
@@ -64,13 +79,11 @@ public class Obstacles<T extends GameFrameControllerSinglePlayer> {
     //
     //............
     public void addObstacleType2(int xPos, int yPos){ // three squares making curvature
-
         if(n>= maxObstacles)
             return;
 
         xPos *=size;
         yPos *=size;
-
         x[n] = xPos - size; //n
         y[n] = yPos;
         n++;
@@ -88,10 +101,8 @@ public class Obstacles<T extends GameFrameControllerSinglePlayer> {
     //
     //............
     public void addObstacleType3(int xPos, int yPos){ // single square
-
         if(n>= maxObstacles)
             return;
-
         x[n] = xPos*size;
         y[n] = yPos*size;
         n++;
@@ -103,13 +114,10 @@ public class Obstacles<T extends GameFrameControllerSinglePlayer> {
     //
     //............
     public void addObstacleType4(int xPos, int yPos){
-
         if(n>= maxObstacles)
             return;
-
         xPos *=size;
         yPos *=size;
-
         x[n] = xPos;
         y[n] = yPos;
         n++;
@@ -130,33 +138,15 @@ public class Obstacles<T extends GameFrameControllerSinglePlayer> {
                 try {
                     sleep(gapTime);
                 } catch (InterruptedException e) {
-                    System.out.println("Sleep was interrupted!");
+                    Thread.currentThread().interrupt();
                 }
             }
-            Platform.runLater((() -> {
-                paneObstacles.getChildren().clear();
-            }));
+            Platform.runLater((() -> paneObstacles.getChildren().clear()));
             System.out.println("Obstacle: thread exited;");
         });
         threadObstacles.start();
     }
 
-    public void stopMakingObstaclesMoving(){
-        running = false;
-        Platform.runLater((() -> { paneObstacles.getChildren().clear(); }));
-        n = 0;
-        x = new int[maxObstacles];
-        y = new int[maxObstacles];
-        if(threadObstacles != null){
-            try {
-                threadObstacles.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-
-    }
 
     private void moveObstacles(String direction){
         if( direction.equals("Right")){
@@ -165,7 +155,6 @@ public class Obstacles<T extends GameFrameControllerSinglePlayer> {
                 x[i] -= size;
             }
         }
-
     }
 
     private void paintObstacles(){
@@ -190,38 +179,68 @@ public class Obstacles<T extends GameFrameControllerSinglePlayer> {
                 y[i] = y[n];
                 return;
         }
-
         for(int p =0; p<n; p++){
             if(x[p] == container.getSnake().getSnakeHeadX() && y[p] == container.getSnake().getSnakeHeadY()){
                 System.out.println("Uderzyles w sciane");
-                Platform.runLater((() -> {
-                    paneObstacles.getChildren().clear();
-                }));
-                container.getShoot().clearSpawnedAmmo();
-                running =false;
-                container.getBadSnake().setRunning(false);
-                container.getSnake().setRunning(false);
-//                container.getLevelOne().running = false;
-//                container.getLevelOne().justFinished = true;
-                t.running = false;
-                t.justFinished = true;
-                container.getGameFrameControllerSinglePlayer().showFinishedScreen();
-
-
+                Platform.runLater((() -> paneObstacles.getChildren().clear()));
+                container.getGameFrameControllerSinglePlayer().finishTheGame();
                 return;
             }
         }
     }
 
+
+    public void addObstaclesToBackGround(){
+        System.out.println("Starting obstacles");
+        if(!running) {
+            running = true;
+            threadAddObstacles = new Thread(() -> {
+                while (running) {
+                    System.out.println(getN());
+                    Random random = new Random();
+                    int howManyObstacles;
+                    int xGapBetweenObstacles;
+                    int witchObstacle;
+                    int gapTime;
+                    int y;
+                    int timeGapBetweenObstacles;
+
+                    howManyObstacles = random.nextInt(1, 5);
+                    gapTime = random.nextInt(1, 3);
+                    timeGapBetweenObstacles = random.nextInt(1, 3);
+
+                    for (int i = 0; i < howManyObstacles; i++) {
+                        y = random.nextInt(0, 21);
+                        xGapBetweenObstacles = random.nextInt(1, 7);
+                        witchObstacle = random.nextInt(1, 5);
+                        System.out.println("witchObstacle: " + witchObstacle);
+                        switch (witchObstacle) {
+                            case 1 -> addObstacleType1(30 + xGapBetweenObstacles, y);
+                            case 2 -> addObstacleType2(30 + xGapBetweenObstacles, y);
+                            case 3 -> addObstacleType3(30 + xGapBetweenObstacles, y);
+                            case 4 -> addObstacleType4(30 + xGapBetweenObstacles, y);
+                        }
+                        try {
+                            sleep(timeGapBetweenObstacles * 1000L);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+
+                    try {
+                        sleep(gapTime * 1000L);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+                System.out.println("Obstacles thread exited;");
+                resertObstacles();
+            });
+            threadAddObstacles.start();
+        }
+    }
+
     public int getN() {
         return n;
-    }
-
-    public void setRunning(boolean b){
-        running = b;
-    }
-
-    public boolean isRunning(){
-        return running;
     }
 }

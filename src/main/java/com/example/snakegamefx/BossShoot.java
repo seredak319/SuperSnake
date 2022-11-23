@@ -4,35 +4,34 @@ import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
 import static java.lang.Thread.sleep;
 
-public class BossShoot<T extends GameFrameControllerSinglePlayer> {
+public class BossShoot {
 
     private final Boss boss;
     private final Pane paneBossShoot;
     private int x;
     private int y;
-    private final int range = 11;
     private String currDirection;
     private Thread threadBossShoot;
     private final int delay = 80;
     private final int size = 25;
     private final Container container;
     private boolean shot;
+    private final int tick_val;
     int tick = 1;
-    private T t;
 
-    BossShoot(Boss boss, Pane paneBossShoot, Container container, T t) {
+
+    BossShoot(Boss boss, Pane paneBossShoot, Container container,int tick) {
         this.boss = boss;
         this.paneBossShoot = paneBossShoot;
         this.container = container;
-        this.t = t;
+        this.tick_val = tick;
     }
 
     public void start() {
         tick++;
-        if (tick % 30 == 0) {
+        if (tick % tick_val == 0) {
             currDirection = boss.getCurrentDirection();
             x = boss.getSnakeHeadX();
             y = boss.getSnakeHeadY();
@@ -41,50 +40,44 @@ public class BossShoot<T extends GameFrameControllerSinglePlayer> {
             shot = true;
         }
         if(shot)
-        moveShoot();
+    moveShoot();
     }
 
     public void bossShoot() {
         System.out.println("bossShoot");
         threadBossShoot = new Thread(() -> {
             while (boss.isRunning()) {
-                Platform.runLater((() -> {
-                    paneBossShoot.getChildren().clear();
-                }));
+                Platform.runLater((() -> paneBossShoot.getChildren().clear()));
                 start();
                 try {
                     sleep(delay);
                 } catch (InterruptedException e) {
-                    System.out.println("Sleep was interrupted!");
+                    Thread.currentThread().interrupt();
                 }
             }
-            Platform.runLater((() -> {
-                paneBossShoot.getChildren().clear();
-            }));
+            Platform.runLater((() -> paneBossShoot.getChildren().clear()));
             System.out.println("bossShoot: thread exited;");
         });
         threadBossShoot.start();
     }
 
     private void moveShoot() {
-
         switch (currDirection) {
             case "Up", "Down" -> {
                 for(int i =0; i<container.getSnake().bodyParts-1; i++)
-                if(y == container.getSnake().getSnakeY(i)){
+            if(y == container.getSnake().getSnakeY(i)){
                     doBoom();
                     return;
                 }
             }
             case "Left", "Right" -> {
                 for(int i =0; i<container.getSnake().bodyParts-1; i++)
-                if(x == container.getSnake().getSnakeX(i) ){
+            if(x == container.getSnake().getSnakeX(i) ){
                     doBoom();
                     return;
                 }
             }
         }
-
         switch (currDirection) {
             case "Up" -> y -= size;
             case "Down" -> y += size;
@@ -92,7 +85,6 @@ public class BossShoot<T extends GameFrameControllerSinglePlayer> {
             case "Right" -> x += size;
         }
         printShoot();
-        //checkCollisionOfShoot();
     }
 
 
@@ -110,48 +102,13 @@ public class BossShoot<T extends GameFrameControllerSinglePlayer> {
             }));
     }
 
-    private void killSnake(){
-
-        System.out.println("GAME OVER, you have been shot by BOSS !!");
-        container.getShoot().clearSpawnedAmmo();
-        container.getBadSnake().setRunning(false);
-        container.getSnake().setRunning(false);
-        t.running = false;
-        t.justFinished = true;
-        container.getGameFrameControllerSinglePlayer().showFinishedScreen();
-        boss.setRunning(false);
-    }
-
     private void checkCollisionWithSnake(){
-//        if((container.getSnake().getSnakeHeadY() == y -size || container.getSnake().getSnakeHeadY() == y + size) && container.getSnake().getSnakeHeadX() == x){
-//            killSnake();
-//        }
-//
-//        if((container.getSnake().getSnakeHeadX() == x+size || container.getSnake().getSnakeHeadX() == x - size) && container.getSnake().getSnakeHeadY() == y){
-//            killSnake();
-//        }
-//
-//        if(container.getSnake().getSnakeX(3) == x+size && container.getSnake().getSnakeY(3) == y){
-//            killSnake();
-//        }
-//
-//        if(container.getSnake().getSnakeX(3) == x-size && container.getSnake().getSnakeY(3) == y){
-//            killSnake();
-//        }
-//
-//        if(container.getSnake().getSnakeX(3) == x && container.getSnake().getSnakeY(3) == y-size){
-//            killSnake();
-//        }
-//
-//        if(container.getSnake().getSnakeX(3) == x && container.getSnake().getSnakeY(3) == y+size){
-//            killSnake();
-//        }
-
-
-        if(x >= container.getSnake().getSnakeHeadX() - size && x <= container.getSnake().getSnakeHeadX() + size && y>=container.getSnake().getSnakeHeadY()-size && y<= container.getSnake().getSnakeHeadY() + size )
-            killSnake();
-        if(x >= container.getSnake().getSnakeX(2) - size && x <= container.getSnake().getSnakeX(2) + size && y>=container.getSnake().getSnakeY(2)-size && y<= container.getSnake().getSnakeY(2) + size )
-            killSnake();
+        for(int i = 0; i< container.getSnake().bodyParts; i++){
+        if(x >= container.getSnake().getSnakeX(i) - size && x <= container.getSnake().getSnakeX(i) + size && y>=container.getSnake().getSnakeY(i)-size && y<= container.getSnake().getSnakeY(i) + size )
+            container.getGameFrameControllerSinglePlayer().finishTheGame();
+        if(x >= container.getSnake().getSnakeX(i) - size && x <= container.getSnake().getSnakeX(i) + size && y>=container.getSnake().getSnakeY(i)-size && y<= container.getSnake().getSnakeY(i) + size )
+            container.getGameFrameControllerSinglePlayer().finishTheGame();
+        }
     }
 
     private void doBoom(){
@@ -206,9 +163,7 @@ public class BossShoot<T extends GameFrameControllerSinglePlayer> {
                     rectangle.setWidth(size);
                     paneBossShoot.getChildren().add(rectangle);
                 }
-
             }
         }));
     }
-
 }

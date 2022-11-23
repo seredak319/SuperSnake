@@ -6,43 +6,29 @@ import javafx.stage.Stage;
 public class Container {
 
     private GameFrameControllerSinglePlayer gameFrameControllerSinglePlayer;
-
     private LevelOne levelOne;
-
     private Stage GamePanelWindow;
-
     private Stage levelOneStage;
-
     private SnakeDecoration snakeDecoration;
-
     private Stage LevelSwitcher;
-
     private Scene LevelSwitcherScene;
-
     private Stage timeChallenge;
-
     private Shoot shoot;
     private BadSnake badSnake;
     private Obstacles obstacles;
-
     private Snake snake;
     private Boss boss;
     private LevelTwo levelTwo;
     private Stage levelTwoStage;
-
     private LevelThree levelThree;
     private Stage levelThreeStage;
-
-
 
     public Scene getLevelSwitcherScene() {
         return LevelSwitcherScene;
     }
 
     public void setLevelSwitcherScene(Scene levelSwitcherScene) {
-        if(notSetYet(levelSwitcherScene)) {
             LevelSwitcherScene = levelSwitcherScene;
-        }
     }
 
     public Stage getLevelSwitcher() {
@@ -50,8 +36,7 @@ public class Container {
     }
 
     public void setLevelSwitcher(Stage levelSwitcher) {
-        if(notSetYet(levelSwitcher))
-        LevelSwitcher = levelSwitcher;
+    LevelSwitcher = levelSwitcher;
     }
 
     public SnakeDecoration getSnakeDecoration() {
@@ -59,8 +44,7 @@ public class Container {
     }
 
     public void setSnakeDecoration(SnakeDecoration snakeDecoration) {
-        if(notSetYet(snakeDecoration))
-        this.snakeDecoration = snakeDecoration;
+    this.snakeDecoration = snakeDecoration;
     }
 
     public Stage getGamePanelWindow() {
@@ -68,13 +52,11 @@ public class Container {
     }
 
     public void setGamePanelWindow(Stage gamePanelWindow) {
-        if(notSetYet(gamePanelWindow))
-        GamePanelWindow = gamePanelWindow;
+    GamePanelWindow = gamePanelWindow;
     }
 
     public void setGameFrameControllerSinglePlayer(GameFrameControllerSinglePlayer gameFrameControllerSinglePlayer){
-        if(notSetYet(gameFrameControllerSinglePlayer))
-        this.gameFrameControllerSinglePlayer = gameFrameControllerSinglePlayer;
+    this.gameFrameControllerSinglePlayer = gameFrameControllerSinglePlayer;
     }
 
     public GameFrameControllerSinglePlayer getGameFrameControllerSinglePlayer() {
@@ -86,8 +68,7 @@ public class Container {
     }
 
     public void setTimeChallenge(Stage timeChallenge) {
-        if(notSetYet(timeChallenge))
-        this.timeChallenge = timeChallenge;
+    this.timeChallenge = timeChallenge;
     }
 
     public Stage getLevelOneStage() {
@@ -95,8 +76,7 @@ public class Container {
     }
 
     public void setLevelOneStage(Stage levelOneStage) {
-        if(notSetYet(levelOneStage))
-        this.levelOneStage = levelOneStage;
+    this.levelOneStage = levelOneStage;
     }
 
     public LevelOne getLevelOne() {
@@ -164,7 +144,6 @@ public class Container {
         this.levelTwoStage = levelTwoStage;
     }
 
-
     public LevelThree getLevelThree() {
         return levelThree;
     }
@@ -179,11 +158,5 @@ public class Container {
 
     public void setLevelThreeStage(Stage levelThreeStage) {
         this.levelThreeStage = levelThreeStage;
-    }
-
-
-
-    private <T> boolean notSetYet(T t){
-        return t != null;
     }
 }

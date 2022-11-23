@@ -4,15 +4,13 @@ import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
 import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 
-public class Boss<T extends GameFrameControllerSinglePlayer> {
-    private T t;
-    private Container container;
-    private int size = 25;
-    private Pane paneBoss;
+public class Boss {
+    private final Container container;
+    private final int size = 25;
+    private final Pane paneBoss;
     String currentDirection = "Left";
     int bodyParts = 7;
     private final int DELAY;
@@ -20,34 +18,37 @@ public class Boss<T extends GameFrameControllerSinglePlayer> {
     private int[] y;
     private boolean running = false;
     private Thread threadSnake;
-    private final BadSnakesMovementAlgorithm badSnakesMovementAlgorithm;
+    private final BossMovementAlgorithm badSnakesMovementAlgorithm;
     public int healthPoints = 10;
+    private int i = 0;
 
-    Boss(Container container, Pane paneBoss, int delay, T t){
+    Boss(Container container, Pane paneBoss, int delay){
         this.container = container;
         this.paneBoss = paneBoss;
         this.DELAY = delay;
-        this.t = t;
-        badSnakesMovementAlgorithm = new BadSnakesMovementAlgorithm(container);
+        badSnakesMovementAlgorithm = new BossMovementAlgorithm(container);
+        resetBoss();
     }
 
-    public void resetOrInitLevel() {
-            if(running) {
-                try {
-                    threadSnake.join();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
+    public void resetBoss() {
             x = new int[bodyParts];
             y = new int[bodyParts];
-
             for(int i=0; i<bodyParts; i++){
                 x[i] = 10*size;
                 y[i] = size*i + 10*size;
             }
+    }
+
+    public void killBoss(){
+        Platform.runLater((() -> { paneBoss.getChildren().clear(); }));
+
+        if(threadSnake != null) {
+           threadSnake.interrupt();
         }
+        running = false;
+        container.getShoot().setBossFight(false);
+        resetBoss();
+    }
 
     private void paintSnake(){
         Platform.runLater((() -> {
@@ -71,38 +72,39 @@ public class Boss<T extends GameFrameControllerSinglePlayer> {
         }));
     }
 
-    public void startSnake(){
-        running = true;
-        threadSnake = new Thread(() -> {
-            while (running) {
-                moveSnake();
-                try {
-                    sleep(DELAY);
-                } catch (InterruptedException e) {
-                    System.out.println("Sleep was interrupted!");
+    public void startBoss(){
+        if(!running) {
+            running = true;
+            threadSnake = new Thread(() -> {
+                while (running) {
+                    moveBoss();
+                    try {
+                        sleep(DELAY);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
-            }
-            System.out.println("Boss: thread exited;");
-            Platform.runLater((() -> {
-                paneBoss.getChildren().clear();
-            }));
-            try {
-                currentThread().join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        threadSnake.start();
+                System.out.println("Boss: thread exited;");
+                Platform.runLater((() -> {
+                    paneBoss.getChildren().clear();
+                }));
+                try {
+                    currentThread().join();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            });
+            threadSnake.start();
+        }
     }
 
-    private void moveSnake(){
-        checkCollisions();
 
+    private void moveBoss(){
+        checkCollisionsOfBoss();
         for(int i=0; i < bodyParts -1; i++){
             x[i] = x[i+1];
             y[i] = y[i+1];
         }
-
         switch(currentDirection){
             case "Up" -> y[bodyParts-1] = y[bodyParts-1] - size;
             case "Down" -> y[bodyParts-1] = y[bodyParts-1] + size;
@@ -110,66 +112,19 @@ public class Boss<T extends GameFrameControllerSinglePlayer> {
             case "Right" -> x[bodyParts-1] = x[bodyParts-1] + size;
         }
         paintSnake();
-        currentDirection = badSnakesMovementAlgorithm.setCurrentDirection(getSnakeHeadX(),getSnakeHeadY());
-    }
-
-    private void checkCollisions() {
-
-        for(int i =0; i<container.getSnake().bodyParts; i++)
-            if(getSnakeHeadX() == container.getSnake().getSnakeX(i) && getSnakeHeadY() == container.getSnake().getSnakeY(i)){
-             System.out.println("Koniec gry");
-             container.getShoot().clearSpawnedAmmo();
-             running =false;
-             container.getBadSnake().setRunning(false);
-             container.getSnake().setRunning(false);
-             //container.getLevelOne().running = false;
-             //container.getLevelOne().justFinished = true;
-             t.running = false;
-             t.justFinished = true;
-             container.getGameFrameControllerSinglePlayer().showFinishedScreen();
+        i++;
+        if(i == 2){
+            currentDirection = badSnakesMovementAlgorithm.setCurrentDirection(getSnakeHeadX(),getSnakeHeadY());
+            i=0;
         }
     }
 
-
-//    public void setCurrentDirection() {
-//
-//        // XDDD pozdro tu chodzi o to że Boss będzie wybierał punkt bliżej niego spośród głowy i ostatniej częsci ciała naszego węża, 'algorytm' lepiej działa
-//        int x = container.getSnake().getSnakeX(3) > container.getSnake().getSnakeHeadX() ? container.getSnake().getSnakeX(3) - getSnakeHeadX() : container.getSnake().getSnakeHeadX() - getSnakeHeadX();
-//        int y = container.getSnake().getSnakeY(3) > container.getSnake().getSnakeHeadY() ? container.getSnake().getSnakeY(3) - getSnakeHeadY() : container.getSnake().getSnakeHeadY() - getSnakeHeadY();
-//
-//
-//        if(x >= 0 && y >= 0){
-//            if( x >= y){
-//                currentDirection = "Right";
-//            } else {
-//                currentDirection = "Down";
-//            }
-//        }
-//
-//        if(x>=0 && y<=0){
-//            if(x>=Math.abs(y)){
-//                currentDirection = "Right";
-//            } else {
-//                currentDirection = "Up";
-//            }
-//        }
-//
-//        if(x<=0 && y>=0){
-//            if(Math.abs(x) >= y){
-//                currentDirection = "Left";
-//            } else {
-//                currentDirection = "Down";
-//            }
-//        }
-//
-//        if(x<=0 && y<=0){
-//            if(Math.abs(x) >= Math.abs(y)){
-//                currentDirection = "Left"; //
-//            } else {
-//                currentDirection = "Up";
-//            }
-//        }
-//    }
+    private void checkCollisionsOfBoss() {
+        for(int i =0; i<container.getSnake().bodyParts; i++)
+            if(getSnakeHeadX() == container.getSnake().getSnakeX(i) && getSnakeHeadY() == container.getSnake().getSnakeY(i)){
+             container.getGameFrameControllerSinglePlayer().finishTheGame();
+        }
+    }
 
     public boolean isRunning(){
         return running;
@@ -191,13 +146,11 @@ public class Boss<T extends GameFrameControllerSinglePlayer> {
         return y[bodyParts-1];
     }
 
-    public int getSnakeX(int i) { return x[i];}
-    public int getSnakeY(int i) { return y[i];}
+    public int getBossX(int i) { return x[i];}
+    public int getBossY(int i) { return y[i];}
 
     public void hitBoss(){
         healthPoints--;
-        t.addPoints();
+        container.getGameFrameControllerSinglePlayer().addPoints();
     }
-
-
 }

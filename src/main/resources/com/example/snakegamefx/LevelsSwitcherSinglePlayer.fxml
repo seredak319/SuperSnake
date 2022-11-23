@@ -3,16 +3,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.snakegamefx.LevelsSwitcherController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.snakegamefx.LevelsSwitcherController">
    <children>
-      <Pane fx:id="screen" prefHeight="400.0" prefWidth="600.0">
-         <children>
-            <Button layoutX="418.0" layoutY="45.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Survive" />
-         </children></Pane>
-      <Button layoutX="245.0" layoutY="44.0" mnemonicParsing="false" onAction="#onMainButtonClick" prefHeight="100.0" prefWidth="100.0" text="Time challenge" />
-      <Button layoutX="70.0" layoutY="206.0" mnemonicParsing="false" onAction="#onLevelOneClick" prefHeight="100.0" prefWidth="100.0" text="level 1" />
-      <Button layoutX="245.0" layoutY="206.0" mnemonicParsing="false" onAction="#onLevelTwoClick" prefHeight="100.0" prefWidth="100.0" text="level 2" />
-      <Button layoutX="417.0" layoutY="206.0" mnemonicParsing="false" onAction="#onLevelThreeClick" prefHeight="100.0" prefWidth="100.0" text="level 3" />
-      <Button layoutX="23.0" layoutY="361.0" mnemonicParsing="false" onMouseClicked="#onMenuButtonClick" text="menu" />
+      <Pane fx:id="screen" prefHeight="400.0" prefWidth="600.0" />
+      <Button fx:id="tc" layoutX="245.0" layoutY="44.0" mnemonicParsing="false" onAction="#onMainButtonClick" prefHeight="100.0" prefWidth="100.0" />
+      <Button fx:id="lev1" layoutX="70.0" layoutY="206.0" mnemonicParsing="false" onAction="#onLevelOneClick" prefHeight="100.0" prefWidth="100.0" />
+      <Button fx:id="lev2" layoutX="245.0" layoutY="206.0" mnemonicParsing="false" onAction="#onLevelTwoClick" prefHeight="100.0" prefWidth="100.0" />
+      <Button fx:id="lev3" layoutX="417.0" layoutY="206.0" mnemonicParsing="false" onAction="#onLevelThreeClick" prefHeight="100.0" prefWidth="100.0" />
+      <Button fx:id="back" layoutX="23.0" layoutY="350.0" mnemonicParsing="false" onMouseClicked="#onMenuButtonClick" prefHeight="30.0" prefWidth="30.0" />
    </children>
 </AnchorPane>

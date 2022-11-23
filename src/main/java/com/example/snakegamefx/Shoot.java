@@ -123,79 +123,52 @@ public class Shoot {
         if(shootX < 0 || shootX > 675 || shootY < 0 || shootY > 550){
             System.out.println("Uderzyło w scianę");
             killShooting();
+            return;
         }
-
-        for(int j=0; j<badSnake.getHowManySnakes(); j++)
-            switch (badSnake.getDirection(j)){
-                case "Right" -> {
-                    if (shootY == badSnake.getStartY(j))
-                        if (shootX <= badSnake.getX(j, bodyParts - 1) && shootX >= badSnake.getX(j, 0)) {
-                            System.out.println("Trafiono! [RIGHT]");
-                            badSnake.killSingleBadSnake(j);
-                            killShooting();
-                        }
-                    if(bossFight){
-                        for(int i =0; i < container.getBoss().bodyParts; i++){
-                            if(shootX == container.getBoss().getSnakeX(i) && shootY == container.getBoss().getSnakeY(i)){
-                                container.getBoss().hitBoss();
+        if(!bossFight){
+            for(int j=0; j<badSnake.getHowManySnakes(); j++)
+                switch (badSnake.getDirection(j)) {
+                    case "Right" -> {
+                        if (shootY == badSnake.getStartY(j))
+                            if (shootX <= badSnake.getX(j, bodyParts - 1) && shootX >= badSnake.getX(j, 0)) {
+                                System.out.println("Trafiono! [RIGHT]");
+                                badSnake.killSingleBadSnake(j);
                                 killShooting();
-                                return;
                             }
-                        }
+                    }
+                    case "Left" -> {
+                        if (shootY == badSnake.getStartY(j))
+                            if (shootX >= badSnake.getX(j, bodyParts - 1) && shootX <= badSnake.getX(j, 0)) {
+                                System.out.println("Trafiono! [LEFT]");
+                                badSnake.killSingleBadSnake(j);
+                                killShooting();
+                            }
+                    }
+                    case "Up" -> {
+                        if (shootX == badSnake.getStartX(j))
+                            if (shootY <= badSnake.getY(j, bodyParts - 1) && shootY >= badSnake.getY(j, 0)) {
+                                System.out.println("Trafiono! [Up]");
+                                badSnake.killSingleBadSnake(j);
+                                killShooting();
+                            }
+                    }
+                    case "Down" -> {
+                        if (shootX == badSnake.getStartX(j))
+                            if (shootY >= badSnake.getY(j, bodyParts - 1) && shootY <= badSnake.getY(j, 0)) {
+                                System.out.println("Trafiono! [Down]");
+                                badSnake.killSingleBadSnake(j);
+                                killShooting();
+                            }
                     }
                 }
-                case "Left" -> {
-                    if (shootY == badSnake.getStartY(j))
-                        if (shootX >= badSnake.getX(j, bodyParts - 1) && shootX <= badSnake.getX(j, 0)) {
-                            System.out.println("Trafiono! [LEFT]");
-                            badSnake.killSingleBadSnake(j);
-                            killShooting();
-                        }
-                    if(bossFight){
-                        for(int i =0; i < container.getBoss().bodyParts; i++){
-                            if(shootX == container.getBoss().getSnakeX(i) && shootY == container.getBoss().getSnakeY(i)){
-                                container.getBoss().hitBoss();
-                                killShooting();
-                                return;
-                            }
-                        }
+        } else {
+                for(int i =0; i< container.getBoss().bodyParts; i++){
+                    if(shootX == container.getBoss().getBossX(i) && shootY == container.getBoss().getBossY(i)){
+                        container.getBoss().hitBoss();
+                        killShooting();
                     }
                 }
-                case "Up" -> {
-                    if (shootX == badSnake.getStartX(j))
-                        if (shootY <= badSnake.getY(j,bodyParts-1) && shootY >= badSnake.getY(j,0)){
-                            System.out.println("Trafiono! [Up]");
-                            badSnake.killSingleBadSnake(j);
-                            killShooting();
-                        }
-                    if(bossFight){
-                        for(int i =0; i < container.getBoss().bodyParts; i++){
-                            if(shootX == container.getBoss().getSnakeX(i) && shootY == container.getBoss().getSnakeY(i)){
-                                container.getBoss().hitBoss();
-                                killShooting();
-                                return;
-                            }
-                        }
-                    }
-                }
-                case "Down" -> {
-                    if (shootX == badSnake.getStartX(j))
-                        if (shootY >= badSnake.getY(j,bodyParts-1) && shootY <= badSnake.getY(j,0)){
-                            System.out.println("Trafiono! [Down]");
-                            badSnake.killSingleBadSnake(j);
-                            killShooting();
-                        }
-                    if(bossFight){
-                        for(int i =0; i < container.getBoss().bodyParts; i++){
-                            if(shootX == container.getBoss().getSnakeX(i) && shootY == container.getBoss().getSnakeY(i)){
-                                container.getBoss().hitBoss();
-                                killShooting();
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
+        }
     }
 
     public void spawnAmmo(){
@@ -253,101 +226,8 @@ public class Shoot {
     }
 
     public void setBossFight(boolean bossFight) {
+        System.out.println("Walczę z BOSS");
         this.bossFight = bossFight;
     }
-
-
-
-
 }
-//
-//
-//    private void initShooting(){
-//        String direction = currentDirection;
-//        timerShoot = new Timer();
-//        timerTaskShoot = new TimerTask() {
-//            @Override
-//            public void run() {
-//                moveShot(direction);
-//            }
-//        };
-//        timerShoot.schedule(timerTaskShoot,0,SHOOT_DELAY);
-//    }
-//
-//    private void killShooting(){
-//        Platform.runLater((() -> {
-//            paneShoot.getChildren().clear();
-//        }));
-//        timerTaskShoot.cancel();
-//        timerShoot.cancel();
-//
-//        shot = false;
-//    }
-//
-//    private void shoot(){
-//        if(!checkAmmo())
-//            return;
-//        shot = true;
-//        initShooting();
-//        shootX = x[bodyParts-1];
-//        shootY = y[bodyParts-1];
-//    }
-//
-//    private boolean checkAmmo(){
-//        if(ammo > 0) {
-//            ammo--;
-//            bulletsAmount.setText(Integer.toString(ammo));
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//
-//    private void moveShot(String direction){
-//        switch (direction){
-//            case "Up" -> {
-//                shootY -= size;
-//            }
-//            case "Down" -> {
-//                shootY += size;
-//            }
-//            case "Left" -> {
-//                shootX -= size;
-//            }
-//            case "Right" -> {
-//                shootX += size;
-//            }
-//        }
-//        printShoot();
-//        checkCollisionOfShoot();
-//    }
-//
-//
-//    private void printShoot(){
-//        Platform.runLater((() -> {
-//            paneShoot.getChildren().clear();
-//            Rectangle rectangle = new Rectangle();
-//            rectangle.setX(shootX);
-//            rectangle.setY(shootY);
-//            rectangle.setFill(Color.YELLOWGREEN);
-//            rectangle.setHeight(size);
-//            rectangle.setWidth(size);
-//            paneShoot.getChildren().add(rectangle);
-//        }));
-//    }
-//
-//
-//    private void checkCollisionOfShoot(){
-//        if(shootX < 0 || shootX > 675 || shootY < 0 || shootY > 550){
-//            System.out.println("Uderzyło w scianę");
-//            killShooting();
-//        }
-//    }
-//
-//    private void SpawnAmmo(){
-//        random = new Random();
-//        int ammoX = random.nextInt(27) * size;
-//        int ammoY = random.nextInt(22) * size;
-//
-//    }
 
