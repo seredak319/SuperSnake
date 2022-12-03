@@ -110,13 +110,25 @@ public class GameFrameControllerSinglePlayer implements Initializable {
             double timeElapsed = (double) (end - start)/1_000_000_000;
             System.out.println("Wow! Your time is: " + (timeElapsed));
             Platform.runLater(() -> time.setText(Double.toString(timeElapsed)));
+            finishTheGame(true);
         }
         container.getShoot().clearSpawnedAmmo();
     }
 
+    public void finishTheGame(boolean win){
+        if(win){
+            ImageView imageView = new ImageView(Objects.requireNonNull(getClass().getResource("img/winner.png")).toExternalForm());
+            imageView.setFitHeight(256);
+            imageView.setFitWidth(256);
+            imageView.setX(210);
+            imageView.setY(210);
+            Platform.runLater(() -> paneSnake.getChildren().add(imageView));
+        }
+    }
+
     public void onButtonClickMenu(){
         backToMenu.getScene().getWindow().hide();
-        container.getLevelSwitcher().show();
+        container.getLevelSwitcherSP().show();
         snake.setRunning(false);
         badSnake.setRunning(false);
         running = false;
@@ -141,7 +153,7 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     }
 
     public void keyboardMoves() {
-        container.getLevelSwitcherScene().setOnKeyPressed(e -> {
+        container.getLevelSwitcherSceneSP().setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case SHIFT -> {
                     if(!running){

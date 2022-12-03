@@ -5,13 +5,23 @@ import javafx.stage.Stage;
 
 public class Container {
 
+
+
+    private MultiPlayerSnake snake1;
+    private MultiPlayerSnake snake2;
+    private int sizeMP;
+    private int rowMP;
+    private int colMP;
     private GameFrameControllerSinglePlayer gameFrameControllerSinglePlayer;
+    private GameFrameControllerMultiPlayer gameFrameControllerMultiPlayer;
     private LevelOne levelOne;
     private Stage GamePanelWindow;
     private Stage levelOneStage;
     private SnakeDecoration snakeDecoration;
-    private Stage LevelSwitcher;
-    private Scene LevelSwitcherScene;
+    private Stage LevelSwitcherSP;
+    private Stage LevelSwitcherMP;
+    private Scene LevelSwitcherSceneSP;
+    private Scene LevelSwitcherSceneMP;
     private Stage timeChallenge;
     private Shoot shoot;
     private BadSnake badSnake;
@@ -23,20 +33,36 @@ public class Container {
     private LevelThree levelThree;
     private Stage levelThreeStage;
 
-    public Scene getLevelSwitcherScene() {
-        return LevelSwitcherScene;
+    public Scene getLevelSwitcherSceneSP() {
+        return LevelSwitcherSceneSP;
     }
 
-    public void setLevelSwitcherScene(Scene levelSwitcherScene) {
-            LevelSwitcherScene = levelSwitcherScene;
+    public void setLevelSwitcherSceneSP(Scene levelSwitcherSceneSP) {
+            LevelSwitcherSceneSP = levelSwitcherSceneSP;
     }
 
-    public Stage getLevelSwitcher() {
-        return LevelSwitcher;
+    public Scene getLevelSwitcherSceneMP() {
+        return LevelSwitcherSceneMP;
     }
 
-    public void setLevelSwitcher(Stage levelSwitcher) {
-    LevelSwitcher = levelSwitcher;
+    public void setLevelSwitcherSceneMP(Scene levelSwitcherSceneMP) {
+        this.LevelSwitcherSceneMP = levelSwitcherSceneMP;
+    }
+
+    public Stage getLevelSwitcherSP() {
+        return LevelSwitcherSP;
+    }
+
+    public void setLevelSwitcherSP(Stage levelSwitcherSP) {
+    LevelSwitcherSP = levelSwitcherSP;
+    }
+
+    public Stage getLevelSwitcherMP() {
+        return LevelSwitcherMP;
+    }
+
+    public void setLevelSwitcherMP(Stage levelSwitcherMP) {
+        LevelSwitcherMP = levelSwitcherMP;
     }
 
     public SnakeDecoration getSnakeDecoration() {
@@ -61,6 +87,14 @@ public class Container {
 
     public GameFrameControllerSinglePlayer getGameFrameControllerSinglePlayer() {
         return gameFrameControllerSinglePlayer;
+    }
+
+    public void setGameFrameControllerMulitPlayer(GameFrameControllerMultiPlayer gameFrameControllerMulitPlayer){
+        this.gameFrameControllerMultiPlayer = gameFrameControllerMulitPlayer;
+    }
+
+    public GameFrameControllerMultiPlayer getGameFrameControllerMultiPlayer() {
+        return gameFrameControllerMultiPlayer;
     }
 
     public Stage getTimeChallenge() {
@@ -158,5 +192,45 @@ public class Container {
 
     public void setLevelThreeStage(Stage levelThreeStage) {
         this.levelThreeStage = levelThreeStage;
+    }
+
+    public int getSizeMP() {
+        return sizeMP;
+    }
+
+    public void setSizeMP(int sizeMP) {
+        this.sizeMP = sizeMP;
+    }
+
+    public int getRowMP() {
+        return rowMP;
+    }
+
+    public void setRowMP(int rowMP) {
+        this.rowMP = rowMP;
+    }
+
+    public int getColMP() {
+        return colMP;
+    }
+
+    public void setColMP(int colMP) {
+        this.colMP = colMP;
+    }
+
+    public MultiPlayerSnake getSnake1() {
+        return snake1;
+    }
+
+    public void setSnake1(MultiPlayerSnake snake1) {
+        this.snake1 = snake1;
+    }
+
+    public MultiPlayerSnake getSnake2() {
+        return snake2;
+    }
+
+    public void setSnake2(MultiPlayerSnake snake2) {
+        this.snake2 = snake2;
     }
 }

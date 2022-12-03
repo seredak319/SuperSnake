@@ -86,6 +86,7 @@ public class LevelTwo extends GameFrameControllerSinglePlayer{
             });
             if(points == 2*n){
                 finishTheGame();
+                finishTheGame(true);
             }
         }
     }

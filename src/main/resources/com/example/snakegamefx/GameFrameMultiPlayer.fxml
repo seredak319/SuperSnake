@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="600.0" onKeyPressed="#keyboardMovesMP" opacity="0.8" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.snakegamefx.GameFrameControllerMultiPlayer">
+   <children>
+      <Pane fx:id="paneBackGround" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: grey;" />
+      <Pane fx:id="paneShoot2" cache="true" cacheHint="SPEED" focusTraversable="true" prefHeight="600.0" prefWidth="900.0" />
+      <Pane fx:id="paneShoot1" prefHeight="600.0" prefWidth="900.0" />
+      <Pane fx:id="paneSpawn2" prefHeight="600.0" prefWidth="900.0" />
+      <Pane fx:id="paneSpawn1" prefHeight="600.0" prefWidth="900.0" />
+      <Pane fx:id="paneSnake2" prefHeight="600.0" prefWidth="900.0" />
+      <Pane fx:id="paneSnake1" onKeyPressed="#keyboardMovesMP" prefHeight="600.0" prefWidth="900.0" />
+      <Button fx:id="backToMenu" focusTraversable="false" layoutX="25.0" layoutY="653.0" mnemonicParsing="false" onAction="#onButtonClickMenu" prefHeight="30.0" prefWidth="30.0" />
+      <Label fx:id="label1" alignment="CENTER" contentDisplay="CENTER" layoutX="133.0" layoutY="651.0" prefHeight="30.0" prefWidth="41.0" style="-fx-background-color: grey; -fx-border-color: black;" textAlignment="CENTER">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <Label fx:id="label2" alignment="CENTER" contentDisplay="CENTER" layoutX="621.0" layoutY="651.0" prefHeight="30.0" prefWidth="41.0" style="-fx-background-color: grey; -fx-border-color: black;" textAlignment="CENTER">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <Label fx:id="hp1" alignment="CENTER" layoutX="179.0" layoutY="651.0" prefHeight="30.0" prefWidth="41.0" style="-fx-border-color: cyan;" textAlignment="CENTER" textFill="#37b7dd">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <Label fx:id="hp2" alignment="CENTER" layoutX="667.0" layoutY="651.0" prefHeight="30.0" prefWidth="41.0" style="-fx-border-color: red;" textAlignment="CENTER" textFill="#ef4141">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <ImageView fx:id="im1" fitHeight="70.0" fitWidth="70.0" layoutX="232.0" layoutY="602.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@img/first.png" />
+         </image></ImageView>
+      <ImageView fx:id="im2" fitHeight="70.0" fitWidth="70.0" layoutX="718.0" layoutY="602.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@img/second.png" />
+         </image></ImageView>
+      <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="128.0" layoutY="601.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@img/imgBULLET.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="180.0" layoutY="608.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@img/heart.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="616.0" layoutY="601.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@img/imgBULLET.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="667.0" layoutY="608.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@img/heart.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="398.0" layoutY="602.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@img/vs.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

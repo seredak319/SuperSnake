@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class LevelsSwitcherController implements Initializable {
+public class LevelsSwitcherControllerSP implements Initializable {
 
     @FXML
     private Button back;
@@ -30,7 +30,7 @@ public class LevelsSwitcherController implements Initializable {
     @FXML
     private Pane screen;
     private final Container container;
-    public LevelsSwitcherController(Container container){
+    public LevelsSwitcherControllerSP(Container container){
         this.container = container;
     }
 
@@ -45,7 +45,7 @@ public class LevelsSwitcherController implements Initializable {
             singlePlayerWindow.setScene(singlePlayerScene);
             singlePlayerWindow.show();
             singlePlayerWindow.setResizable(false);
-            container.setLevelSwitcherScene(singlePlayerScene);
+            container.setLevelSwitcherSceneSP(singlePlayerScene);
             container.setGameFrameControllerSinglePlayer(fxmlLoader.getController());
             container.setTimeChallenge(singlePlayerWindow);
             container.getTimeChallenge().setOnCloseRequest(event -> container.getGameFrameControllerSinglePlayer().running = false);
@@ -66,7 +66,7 @@ public class LevelsSwitcherController implements Initializable {
             singlePlayerWindow.setScene(singlePlayerScene);
             singlePlayerWindow.show();
             singlePlayerWindow.setResizable(false);
-            container.setLevelSwitcherScene(singlePlayerScene);
+            container.setLevelSwitcherSceneSP(singlePlayerScene);
             container.setGameFrameControllerSinglePlayer(fxmlLoader.getController());
             container.setLevelOne(fxmlLoader.getController());
             container.setLevelOneStage(singlePlayerWindow);
@@ -89,7 +89,7 @@ public class LevelsSwitcherController implements Initializable {
             singlePlayerWindow.setScene(singlePlayerScene);
             singlePlayerWindow.show();
             singlePlayerWindow.setResizable(false);
-            container.setLevelSwitcherScene(singlePlayerScene);
+            container.setLevelSwitcherSceneSP(singlePlayerScene);
             container.setGameFrameControllerSinglePlayer(fxmlLoader.getController());
             container.setLevelTwo(fxmlLoader.getController());
             container.setLevelTwoStage(singlePlayerWindow);
@@ -111,7 +111,7 @@ public class LevelsSwitcherController implements Initializable {
             singlePlayerWindow.setScene(singlePlayerScene);
             singlePlayerWindow.show();
             singlePlayerWindow.setResizable(false);
-            container.setLevelSwitcherScene(singlePlayerScene);
+            container.setLevelSwitcherSceneSP(singlePlayerScene);
             container.setGameFrameControllerSinglePlayer(fxmlLoader.getController());
             container.setLevelThree(fxmlLoader.getController());
             container.setLevelThreeStage(singlePlayerWindow);
@@ -123,7 +123,7 @@ public class LevelsSwitcherController implements Initializable {
     }
 
     public void onMenuButtonClick(){
-        container.getLevelSwitcher().hide();
+        container.getLevelSwitcherSP().hide();
         container.getGamePanelWindow().show();
         container.getSnakeDecoration().startSnakes();
     }

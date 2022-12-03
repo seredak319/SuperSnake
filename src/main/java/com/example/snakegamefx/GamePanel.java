@@ -36,15 +36,15 @@ public class GamePanel implements Initializable {
             container.setSnakeDecoration(snakeDecoration);
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("LevelsSwitcherSinglePlayer.fxml"));
-            fxmlLoader.setControllerFactory(c -> new LevelsSwitcherController(container));
+            fxmlLoader.setControllerFactory(c -> new LevelsSwitcherControllerSP(container));
             Scene singlePlayerScene = new Scene(fxmlLoader.load());
             Stage levelsSwitcher = new Stage();
             levelsSwitcher.setResizable(false);
             levelsSwitcher.setTitle("Choose level!");
             levelsSwitcher.setScene(singlePlayerScene);
             levelsSwitcher.show();
-            container.setLevelSwitcher(levelsSwitcher);
-            container.getLevelSwitcher().getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("img/icon.png")).toString()));
+            container.setLevelSwitcherSP(levelsSwitcher);
+            container.getLevelSwitcherSP().getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("img/icon.png")).toString()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -58,6 +58,24 @@ public class GamePanel implements Initializable {
 
     public void onDobleGamePicClick(){
         System.out.println("Wybrano grę dwu osobową ;o");
+        try{
+            container.setSnakeDecoration(snakeDecoration);
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("MultiPlayerSwitcher.fxml"));
+            fxmlLoader.setControllerFactory(c -> new MultiPlayerSwitcherController(container));
+            Scene multiPlayerScene = new Scene(fxmlLoader.load());
+            Stage levelsSwitcher = new Stage();
+            levelsSwitcher.setResizable(false);
+            levelsSwitcher.setTitle("Choose map!");
+            levelsSwitcher.setScene(multiPlayerScene);
+            levelsSwitcher.show();
+            container.setLevelSwitcherSP(levelsSwitcher);
+            container.getLevelSwitcherSP().getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("img/icon.png")).toString()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        container.getGamePanelWindow().hide();
+        snakeDecoration.setRunning(false);
     }
 
     @Override

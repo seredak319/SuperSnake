@@ -92,6 +92,7 @@ public class LevelThree extends GameFrameControllerSinglePlayer{
             });
             if(points == 2*n){
                 finishTheGame();
+                finishTheGame(true);
             }
         }
     }
