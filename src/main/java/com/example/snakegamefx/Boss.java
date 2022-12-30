@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
 import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 
@@ -41,7 +42,6 @@ public class Boss {
 
     public void killBoss(){
         Platform.runLater((() -> { paneBoss.getChildren().clear(); }));
-
         if(threadSnake != null) {
            threadSnake.interrupt();
         }
@@ -84,7 +84,6 @@ public class Boss {
                         Thread.currentThread().interrupt();
                     }
                 }
-                System.out.println("Boss: thread exited;");
                 Platform.runLater((() -> {
                     paneBoss.getChildren().clear();
                 }));
@@ -97,7 +96,6 @@ public class Boss {
             threadSnake.start();
         }
     }
-
 
     private void moveBoss(){
         checkCollisionsOfBoss();

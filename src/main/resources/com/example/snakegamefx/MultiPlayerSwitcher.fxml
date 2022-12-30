@@ -41,9 +41,9 @@
             <Image url="@img/treasure-map.png" />
          </image>
       </ImageView>
-      <Slider fx:id="snakeSpeed" blockIncrement="50.0" layoutX="65.0" layoutY="180.0" minorTickCount="0" prefHeight="30.0" prefWidth="204.0" showTickMarks="true" snapToTicks="true" value="50.0" />
-      <Slider fx:id="shootSpeed" blockIncrement="50.0" layoutX="65.0" layoutY="250.0" minorTickCount="0" prefHeight="30.0" prefWidth="204.0" showTickMarks="true" snapToTicks="true" value="50.0" />
-      <Slider fx:id="mapSize" blockIncrement="50.0" layoutX="65.0" layoutY="320.0" minorTickCount="0" prefHeight="30.0" prefWidth="204.0" showTickMarks="true" snapToTicks="true" value="50.0" />
+      <Slider fx:id="snakeSpeed" blockIncrement="25.0" layoutX="65.0" layoutY="180.0" minorTickCount="0" prefHeight="30.0" prefWidth="204.0" showTickMarks="true" snapToTicks="true" value="50.0" />
+      <Slider fx:id="shootSpeed" blockIncrement="25.0" layoutX="65.0" layoutY="250.0" minorTickCount="0" prefHeight="30.0" prefWidth="204.0" showTickMarks="true" snapToTicks="true" value="50.0" />
+      <Slider fx:id="mapSize" blockIncrement="25.0" layoutX="65.0" layoutY="320.0" minorTickCount="0" prefHeight="30.0" prefWidth="204.0" showTickMarks="true" snapToTicks="true" value="50.0" />
       <Button fx:id="lev2" layoutX="245.0" layoutY="40.0" mnemonicParsing="false" onAction="#onLevelTwoClick" prefHeight="100.0" prefWidth="100.0" />
       <Button fx:id="back" layoutX="23.0" layoutY="350.0" mnemonicParsing="false" onMouseClicked="#onMenuButtonClick" prefHeight="30.0" prefWidth="30.0" />
    </children>

@@ -3,23 +3,20 @@ package com.example.snakegamefx;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+//to to napewno nie jest dobre
+
 public class Container {
-
-
 
     private MultiPlayerSnake snake1;
     private MultiPlayerSnake snake2;
-    private int sizeMP;
     private int rowMP;
     private int colMP;
     private GameFrameControllerSinglePlayer gameFrameControllerSinglePlayer;
     private GameFrameControllerMultiPlayer gameFrameControllerMultiPlayer;
-    private LevelOne levelOne;
     private Stage GamePanelWindow;
     private Stage levelOneStage;
     private SnakeDecoration snakeDecoration;
     private Stage LevelSwitcherSP;
-    private Stage LevelSwitcherMP;
     private Scene LevelSwitcherSceneSP;
     private Scene LevelSwitcherSceneMP;
     private Stage timeChallenge;
@@ -28,9 +25,7 @@ public class Container {
     private Obstacles obstacles;
     private Snake snake;
     private Boss boss;
-    private LevelTwo levelTwo;
     private Stage levelTwoStage;
-    private LevelThree levelThree;
     private Stage levelThreeStage;
 
     public Scene getLevelSwitcherSceneSP() {
@@ -55,14 +50,6 @@ public class Container {
 
     public void setLevelSwitcherSP(Stage levelSwitcherSP) {
     LevelSwitcherSP = levelSwitcherSP;
-    }
-
-    public Stage getLevelSwitcherMP() {
-        return LevelSwitcherMP;
-    }
-
-    public void setLevelSwitcherMP(Stage levelSwitcherMP) {
-        LevelSwitcherMP = levelSwitcherMP;
     }
 
     public SnakeDecoration getSnakeDecoration() {
@@ -113,14 +100,6 @@ public class Container {
     this.levelOneStage = levelOneStage;
     }
 
-    public LevelOne getLevelOne() {
-        return levelOne;
-    }
-
-    public void setLevelOne(LevelOne levelOne) {
-        this.levelOne = levelOne;
-    }
-
     public Shoot getShoot() {
         return shoot;
     }
@@ -161,15 +140,6 @@ public class Container {
         this.boss = boss;
     }
 
-
-    public LevelTwo getLevelTwo() {
-        return levelTwo;
-    }
-
-    public void setLevelTwo(LevelTwo levelTwo) {
-        this.levelTwo = levelTwo;
-    }
-
     public Stage getLevelTwoStage() {
         return levelTwoStage;
     }
@@ -178,28 +148,12 @@ public class Container {
         this.levelTwoStage = levelTwoStage;
     }
 
-    public LevelThree getLevelThree() {
-        return levelThree;
-    }
-
-    public void setLevelThree(LevelThree levelThree) {
-        this.levelThree = levelThree;
-    }
-
     public Stage getLevelThreeStage() {
         return levelThreeStage;
     }
 
     public void setLevelThreeStage(Stage levelThreeStage) {
         this.levelThreeStage = levelThreeStage;
-    }
-
-    public int getSizeMP() {
-        return sizeMP;
-    }
-
-    public void setSizeMP(int sizeMP) {
-        this.sizeMP = sizeMP;
     }
 
     public int getRowMP() {

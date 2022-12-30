@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
 import static java.lang.Thread.sleep;
 
 public class BossShoot {
@@ -14,7 +15,7 @@ public class BossShoot {
     private int y;
     private String currDirection;
     private Thread threadBossShoot;
-    private final int delay = 80;
+    private final int delay = 110;
     private final int size = 25;
     private final Container container;
     private boolean shot;
@@ -36,7 +37,6 @@ public class BossShoot {
             x = boss.getSnakeHeadX();
             y = boss.getSnakeHeadY();
             tick = 1;
-            System.out.println("@@ PIF PAF @@");
             shot = true;
         }
         if(shot)
@@ -44,7 +44,6 @@ public class BossShoot {
     }
 
     public void bossShoot() {
-        System.out.println("bossShoot");
         threadBossShoot = new Thread(() -> {
             while (boss.isRunning()) {
                 Platform.runLater((() -> paneBossShoot.getChildren().clear()));
@@ -56,7 +55,6 @@ public class BossShoot {
                 }
             }
             Platform.runLater((() -> paneBossShoot.getChildren().clear()));
-            System.out.println("bossShoot: thread exited;");
         });
         threadBossShoot.start();
     }

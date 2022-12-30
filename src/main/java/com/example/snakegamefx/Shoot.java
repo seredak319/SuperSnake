@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
 import java.util.Random;
 
 import static java.lang.Thread.sleep;
@@ -29,7 +30,7 @@ public class Shoot {
     private final BadSnake badSnake;
     private final int bodyParts =4;
     private Thread thread;
-    private Container container;
+    private final Container container;
     private boolean bossFight = false;
 
 

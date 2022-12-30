@@ -1,7 +1,6 @@
 package com.example.snakegamefx;
 
 import javafx.application.Platform;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -31,20 +30,15 @@ public class MultiPlayerSnake {
     private final int startY;
     private int health = 3;
     private final String startDirection;
-    private final Scene scene;
     public MultiplayerShoot shoot;
     private final int startValueOfBullets = 5;
-    private final int startValueOfHealth = 3;
-    private Color headColor;
+    private final Color headColor;
     private final int shootDELAY;
     private boolean justShot = false;
     private int count = 0;
-    private int howManyTicksInvisible=8;
 
 
-
-
-    public MultiPlayerSnake(Pane paneSnake,Pane paneShoot,Pane paneSpawn,Label ammo, Label healthPoints, Container container, int size, int DELAY, int shootDELAY, int whichPlayer, int startX, int startY, String startDirection, Scene scene){
+    public MultiPlayerSnake(Pane paneSnake,Pane paneShoot,Pane paneSpawn,Label ammo, Label healthPoints, Container container, int size, int DELAY, int shootDELAY, int whichPlayer, int startX, int startY, String startDirection){
         this.paneSnake = paneSnake;
         this.container = container;
         this.size = size;
@@ -53,7 +47,6 @@ public class MultiPlayerSnake {
         this.startX = startX;
         this.startY = startY;
         this.startDirection = startDirection;
-        this.scene = scene;
         this.paneShoot = paneShoot;
         this.paneSpawn = paneSpawn;
         this.bullAmount = ammo;
@@ -67,7 +60,6 @@ public class MultiPlayerSnake {
         } else {
             headColor = Color.BLACK;
         }
-
         initLevel();
     }
 
@@ -78,8 +70,7 @@ public class MultiPlayerSnake {
         paintSnake();
     }
 
-
-    private void paintSnake(){
+    private void paintSnake(){ //to jest słabe wystarczy podmienić kolory ale już mi się nie chciało
         if(!justShot){
             Platform.runLater((() -> {
                 paneSnake.getChildren().clear();
@@ -101,6 +92,7 @@ public class MultiPlayerSnake {
                 paneSnake.getChildren().add(rectangleHead);
             }));
         } else {
+            int howManyTicksInvisible = 8;
             if(count == howManyTicksInvisible){
                 justShot = false;
                 count = -1;
@@ -141,7 +133,6 @@ public class MultiPlayerSnake {
                 y[i] = startY;
             }
         } else if (whichPlayer == 2){
-            System.out.println("DID");
             for(int i=bodyParts-1; i>=0; i--){
                 x[i] = startX + (bodyParts-1)*size - size*i;
                 y[i] = startY;
@@ -149,8 +140,6 @@ public class MultiPlayerSnake {
         } else{
             throw new IllegalArgumentException("Snake has to have his number <1,2>");
         }
-
-
         shoot.setAmmo(startValueOfBullets);
     }
 
@@ -186,7 +175,6 @@ public class MultiPlayerSnake {
             resetLevel();
             startSnake();
         }
-
     }
 
     private boolean decreaseHealthPoints(){
@@ -202,7 +190,6 @@ public class MultiPlayerSnake {
     }
 
     public void startSnake(){
-        System.out.println("snake"+whichPlayer+"started ;)");
         if(!running) {
             running = true;
             threadSnake = new Thread(() -> {
@@ -214,10 +201,7 @@ public class MultiPlayerSnake {
                         Thread.currentThread().interrupt();
                     }
                 }
-                System.out.println("SnakeDecoration: thread exited;");
-                Platform.runLater((() -> {
-                    paneSnake.getChildren().clear();
-                }));
+                Platform.runLater((() -> paneSnake.getChildren().clear()));
                 try {
                     currentThread().join();
                 } catch (InterruptedException e) {
@@ -247,30 +231,18 @@ public class MultiPlayerSnake {
     }
 
     private void checkCollisions(){
-//        if(getSnakeHeadX() < 0 || getSnakeHeadX() >= container.getColMP()*size || getSnakeHeadY() < 0 || getSnakeHeadY() >= container.getRowMP()*size){
-//            container.getGameFrameControllerMultiPlayer().killTheGame();
-//            System.out.println("FINISH THE GAME");
-//        }
         if(getSnakeHeadX() < 0){
             x[bodyParts-1] = container.getColMP()*size - size;
         }
-
         if(getSnakeHeadX() >= container.getColMP()*size){
             x[bodyParts-1] = 0;
         }
-
         if(getSnakeHeadY() < 0){
             y[bodyParts-1] = container.getRowMP()*size - size;
         }
-
-
         if(getSnakeHeadY() >= container.getRowMP()*size){
             y[bodyParts-1] = 0;
         }
-
-
-
-
         if(x[bodyParts-1] == shoot.getXOfSpawnedAmmo() && y[bodyParts-1] == shoot.getYOfSpawnedAmmo()){
             shoot.addAmmo();
             shoot.spawnAmmo();

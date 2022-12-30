@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
 import java.util.Random;
 
 public class SnakeDecoration extends Thread{
@@ -36,7 +37,6 @@ public class SnakeDecoration extends Thread{
         howManySnakes++;
         this.direction[howManySnakes-1] = direction;
         resetSnake(direction,howManySnakes);
-        System.out.println("SnakeDecoration: newSnakeDecoration();");
     }
 
     public void resetSnake(String direction, int howManySnakesLocal){
@@ -101,7 +101,6 @@ public class SnakeDecoration extends Thread{
 
 
     public void startSnakes(){
-        System.out.println("SnakeDecoration: startSnakes();");
         running = true;
         Thread thread = new Thread(() -> {
             while (running) {
@@ -117,7 +116,6 @@ public class SnakeDecoration extends Thread{
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            System.out.println("SnakeDecoration: thread exited;");
         });
         thread.start();
     }

@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
 import java.util.Random;
 
 import static java.lang.Thread.sleep;
@@ -146,8 +147,6 @@ public class Obstacles{
         });
         threadObstacles.start();
     }
-
-
     private void moveObstacles(String direction){
         if( direction.equals("Right")){
             for(int i =0; i<n; i++){

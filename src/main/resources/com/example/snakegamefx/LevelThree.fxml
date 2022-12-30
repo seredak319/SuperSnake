@@ -16,7 +16,6 @@
       <Pane fx:id="paneSpawn" prefHeight="575.0" prefWidth="700.0" />
       <Pane fx:id="paneBoss" prefHeight="575.0" prefWidth="700.0" />
       <Pane fx:id="paneBossShoot" prefHeight="575.0" prefWidth="700.0" />
-      <ImageView fx:id="finishImage" fitHeight="575.0" fitWidth="700.0" pickOnBounds="true" preserveRatio="true" />
       <Pane fx:id="paneBadSnakes" prefHeight="575.0" prefWidth="700.0">
          <opaqueInsets>
             <Insets />
@@ -36,6 +35,7 @@
             </Label>
          </children></Pane>
       <Button fx:id="backToMenu" cancelButton="true" focusTraversable="false" layoutX="14.0" layoutY="661.0" mnemonicParsing="false" onAction="#onButtonClickMenu" prefHeight="30.0" prefWidth="30.0" textOverrun="CLIP" />
+      <ImageView fx:id="finishImage" fitHeight="575.0" fitWidth="700.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="78.0" fitWidth="86.0" layoutX="577.0" layoutY="582.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@img/imgBULLET.png" />

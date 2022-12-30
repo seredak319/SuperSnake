@@ -25,8 +25,6 @@ public class BadSnake extends Thread{
     private final Container container;
     private Thread threadBadSnakes;
 
-
-
     BadSnake(Pane paneBadSnake, Container container){
         this.paneBadSnake = paneBadSnake;
         this.container = container;
@@ -34,7 +32,6 @@ public class BadSnake extends Thread{
     }
 
     public void newBadSnake(String direction){
-        System.out.println("BadSnake: newBadSnake");
         howManySnakes++;
         this.direction[howManySnakes-1] = direction;
         resetSnake(direction,howManySnakes);
@@ -93,14 +90,13 @@ public class BadSnake extends Thread{
                 this.startY[howManySnakesLocal-1] = (int) paneBadSnake.getPrefHeight() - size;
                 for(int i=0; i<bodyParts; i++){
                     x[howManySnakesLocal-1][i] = startX[howManySnakesLocal-1];
-                    y[howManySnakesLocal-1][i] = startY[howManySnakesLocal-1] /*+ size*i*/;
+                    y[howManySnakesLocal-1][i] = startY[howManySnakesLocal-1];
                 }
             }
         }
     }
 
     public void newBadSnakeRandomDirection(){
-        System.out.println("BadSnake: howManySnakes[" +howManySnakes+ "]");
         if(howManySnakes >= maxBadSnakes)
             return;
         howManySnakes++;

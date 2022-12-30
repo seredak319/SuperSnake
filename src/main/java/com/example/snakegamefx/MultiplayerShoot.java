@@ -26,15 +26,12 @@ public class MultiplayerShoot {
     private final Label bulletsAmount;
     private boolean spawnedAmmo;
     private final Pane paneSpawn;
-    private final int bodyParts =4;
     private Thread thread;
     private final Container container;
     private final Color shootColor;
     private final Color spawnColor;
     private final int shootDELAY;
-    private int whichPlayer;
-
-
+    private final int whichPlayer;
 
     MultiplayerShoot(int size, Pane paneShoot, Pane paneSpawn, Label bulletsAmount,Container container,int START_VALUE,int whichPlayer, int shootDELAY){
         this.size = size;
@@ -64,7 +61,6 @@ public class MultiplayerShoot {
     }
 
     private void initShooting(){
-        System.out.println("InitShooting");
         thread = new Thread(() -> {
             while (isShot()) {
                 moveShoot(direction);
@@ -74,7 +70,6 @@ public class MultiplayerShoot {
                     System.out.println("Sleep was interrupted!");
                 }
             }
-            System.out.println("SnakeDecoration: thread exited;");
         });
         thread.start();
     }
@@ -90,7 +85,6 @@ public class MultiplayerShoot {
     }
 
     public void doShoot(int shootX, int shootY, String direction){
-        System.out.println("DoShoot");
         if(!checkAmmo())
             return;
         shot = true;
@@ -101,7 +95,6 @@ public class MultiplayerShoot {
     }
 
     private boolean checkAmmo(){
-        System.out.println("CheckAmmo");
         if(ammo > 0) {
             ammo--;
             bulletsAmount.setText(Integer.toString(ammo));
@@ -136,11 +129,11 @@ public class MultiplayerShoot {
 
     private void checkCollisionOfShoot() {
         if (shootX < 0 || shootX >= size * container.getColMP() || shootY < 0 || shootY >= size * container.getRowMP()) {
-            System.out.println("Uderzyło w scianę");
             killShooting();
             return;
         }
 
+        int bodyParts = 4;
         if (whichPlayer == 1) {
             if (!container.getSnake2().isJustShot()){
                 for (int i = 0; i < bodyParts; i++) {
@@ -153,7 +146,7 @@ public class MultiplayerShoot {
         }
 
         if(whichPlayer == 2) {
-            if (!container.getSnake2().isJustShot()) {
+            if (!container.getSnake1().isJustShot()) {
                 for (int i = 0; i < bodyParts; i++) {
                     if (shootX == container.getSnake1().getSnakeX(i) && shootY == container.getSnake1().getSnakeY(i)) {
                         container.getSnake1().snakeShot();
@@ -166,7 +159,6 @@ public class MultiplayerShoot {
     }
 
     public void spawnAmmo(){
-        System.out.println("Spawning ammo");
         spawnedAmmo = true;
         Random random = new Random();
         rectangleAmmo = new Rectangle();
@@ -203,12 +195,8 @@ public class MultiplayerShoot {
         return shootSpawnY;
     }
 
-    public int getAmmo(){
-        return ammo;
-    }
-
     public boolean isShoot(){
-        return shot;
+        return !shot;
     }
 
     public boolean isShot() {

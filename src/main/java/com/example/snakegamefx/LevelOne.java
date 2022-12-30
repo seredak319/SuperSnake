@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+
 import java.util.Objects;
 
 public class LevelOne extends GameFrameControllerSinglePlayer{
@@ -40,7 +41,7 @@ public class LevelOne extends GameFrameControllerSinglePlayer{
     @Override
     public void resetLevel() {
         shoot.setAmmo(container.getShoot().START_VALUE);
-        container.getBoss().healthPoints = 5;
+        container.getBoss().healthPoints = 10;
         labelTitle.setText("Killed snakes:");
         points = 0;
         progress = 0;
@@ -56,7 +57,7 @@ public class LevelOne extends GameFrameControllerSinglePlayer{
     @Override
     public void addPoints() {
         points++;
-        int n = 3;
+        int n = 10;
         if(points <= n){
             Platform.runLater(() -> {
                 pointsAmount.setText(Integer.toString(points));

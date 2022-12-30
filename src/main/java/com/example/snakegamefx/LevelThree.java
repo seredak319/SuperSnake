@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+
 import java.util.Objects;
 
 
@@ -45,8 +46,7 @@ public class LevelThree extends GameFrameControllerSinglePlayer{
     @Override
     public void resetLevel() {
         shoot.setAmmo(container.getShoot().START_VALUE);
-        container.getBoss().healthPoints = 5; //todo
-        //boss.resetBoss();
+        container.getBoss().healthPoints = 10;
         labelTitle.setText("Killed snakes:");
         shoot.setBossFight(false);
         points = 0;
@@ -64,7 +64,7 @@ public class LevelThree extends GameFrameControllerSinglePlayer{
     @Override
     public void addPoints() {
         points++;
-        int n = 3;
+        int n = 10;
         if(points <= n){
             Platform.runLater(() -> {
                 pointsAmount.setText(Integer.toString(points));
@@ -105,12 +105,12 @@ public class LevelThree extends GameFrameControllerSinglePlayer{
         Platform.runLater(() -> finishPane.getChildren().add(finishImage));
         int size = 25;
         int obstaclesDelay = 110;
-        int bossDelay = 370;
+        int bossDelay = 350;
         boss = new Boss(container,paneBoss,bossDelay);
         bossShoot = new BossShoot(boss,paneBossShoot,container,40);
         obstacles = new Obstacles(paneObstacles, container, obstaclesDelay);
         badSnake = new BadSnake(paneBadSnakes,container);
-        shoot = new Shoot(size,paneShoot,paneSpawn, bulletsAmount,badSnake, container,30);
+        shoot = new Shoot(size,paneShoot,paneSpawn, bulletsAmount,badSnake, container,5);
         snake = new Snake(paneSnake, container, size);
         container.setBadSnake(badSnake);
         container.setShoot(shoot);

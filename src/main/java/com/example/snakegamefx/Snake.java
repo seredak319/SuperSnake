@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
 import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 
@@ -83,7 +84,6 @@ public class Snake{
                         Thread.currentThread().interrupt();
                     }
                 }
-                System.out.println("SnakeDecoration: thread exited;");
                 Platform.runLater((() -> {
                     paneSnake.getChildren().clear();
                 }));
@@ -116,7 +116,6 @@ public class Snake{
     private void checkCollisionsAmmo(){
         if(getSnakeHeadX() < 0 || getSnakeHeadX() > 27*size || getSnakeHeadY() < 0 || getSnakeHeadY() > 22*size){
             container.getGameFrameControllerSinglePlayer().finishTheGame();
-            System.out.println("FINISH THE GAME");
         }
 
         if(!container.getShoot().getSpawnedAmmo())

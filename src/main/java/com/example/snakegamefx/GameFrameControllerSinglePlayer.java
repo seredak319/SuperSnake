@@ -11,12 +11,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 
 import java.net.URL;
-import java.util.*;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 public class GameFrameControllerSinglePlayer implements Initializable {
-
-//TODO: niepotrzebnie tworzymy cały czas new Rectangle w shoot i snake; Można by było to stowrzyć raz i tylko zmieniac X i Y;   ++ optymalizacja
-
 
     @FXML
     private Pane paneBackGround;
@@ -108,7 +106,6 @@ public class GameFrameControllerSinglePlayer implements Initializable {
         if(time !=null){
             long end = System.nanoTime();
             double timeElapsed = (double) (end - start)/1_000_000_000;
-            System.out.println("Wow! Your time is: " + (timeElapsed));
             Platform.runLater(() -> time.setText(Double.toString(timeElapsed)));
             finishTheGame(true);
         }
@@ -137,7 +134,6 @@ public class GameFrameControllerSinglePlayer implements Initializable {
     private void startGame(){
         if(!snake.isRunning() && !justFinished) {
             running = true;
-            System.out.println("ENTER, stands for start");
             snake.startSnake();
             startBadSnakes();
         }
@@ -145,7 +141,6 @@ public class GameFrameControllerSinglePlayer implements Initializable {
             running = true;
             resetLevel();
             justFinished = false;
-            System.out.println("Great! Try to improve your time!");
             snake.startSnake();
             shoot.clearSpawnedAmmo();
             startBadSnakes();

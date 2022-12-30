@@ -21,11 +21,7 @@ public class MultiPlayerSwitcherController implements Initializable {
     @FXML
     private Button back;
     @FXML
-    private Button lev1;
-    @FXML
     private Button lev2;
-    @FXML
-    private Button lev3;
     @FXML
     private Pane screen;
     @FXML
@@ -43,29 +39,10 @@ public class MultiPlayerSwitcherController implements Initializable {
         this.container = container;
     }
 
-
-    public void onLevelOneClick(){
-        readUserChoice();
-        try {
-            loadMultiLevel(1);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public void onLevelTwoClick(){
         readUserChoice();
         try {
-            loadMultiLevel(2);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void onLevelThreeClick(){
-        readUserChoice();
-        try {
-            loadMultiLevel(3);
+            loadMultiLevel();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -75,16 +52,12 @@ public class MultiPlayerSwitcherController implements Initializable {
         mapSizeInt = mapSize.getValue();
         snakeSpeedInt = snakeSpeed.getValue();
         shootSpeedInt = shootSpeed.getValue();
-
-        System.out.println(mapSizeInt);
-        System.out.println(snakeSpeedInt);
-        System.out.println(shootSpeedInt);
     }
 
-    private void loadMultiLevel(int whichMap) throws IOException {
+    private void loadMultiLevel() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("GameFrameMultiPlayer.fxml"));
-        fxmlLoader.setControllerFactory(c -> new GameFrameControllerMultiPlayer(container, mapSizeInt, snakeSpeedInt, shootSpeedInt, whichMap));
+        fxmlLoader.setControllerFactory(c -> new GameFrameControllerMultiPlayer(container, mapSizeInt, snakeSpeedInt, shootSpeedInt));
         Scene multiPlayerScene = new Scene(fxmlLoader.load());
         Stage multiPlayerWindow = new Stage();
         multiPlayerWindow.setTitle("Multiplayer");
@@ -93,7 +66,6 @@ public class MultiPlayerSwitcherController implements Initializable {
         multiPlayerWindow.setResizable(false);
         multiPlayerWindow.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("img/icon.png")).toString()));
         container.setLevelSwitcherSceneMP(multiPlayerScene);
-        container.setLevelSwitcherMP(multiPlayerWindow);
         container.setGameFrameControllerMulitPlayer(fxmlLoader.getController());
     }
 

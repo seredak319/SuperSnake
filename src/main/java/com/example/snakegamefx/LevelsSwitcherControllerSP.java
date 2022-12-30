@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
@@ -68,7 +69,6 @@ public class LevelsSwitcherControllerSP implements Initializable {
             singlePlayerWindow.setResizable(false);
             container.setLevelSwitcherSceneSP(singlePlayerScene);
             container.setGameFrameControllerSinglePlayer(fxmlLoader.getController());
-            container.setLevelOne(fxmlLoader.getController());
             container.setLevelOneStage(singlePlayerWindow);
             container.getLevelOneStage().setOnCloseRequest(event -> container.getGameFrameControllerSinglePlayer().running = false);
             singlePlayerWindow.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("img/icon.png")).toString()));
@@ -91,7 +91,6 @@ public class LevelsSwitcherControllerSP implements Initializable {
             singlePlayerWindow.setResizable(false);
             container.setLevelSwitcherSceneSP(singlePlayerScene);
             container.setGameFrameControllerSinglePlayer(fxmlLoader.getController());
-            container.setLevelTwo(fxmlLoader.getController());
             container.setLevelTwoStage(singlePlayerWindow);
             container.getLevelTwoStage().setOnCloseRequest(event -> container.getGameFrameControllerSinglePlayer().running = false);
             singlePlayerWindow.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("img/icon.png")).toString()));
@@ -113,7 +112,6 @@ public class LevelsSwitcherControllerSP implements Initializable {
             singlePlayerWindow.setResizable(false);
             container.setLevelSwitcherSceneSP(singlePlayerScene);
             container.setGameFrameControllerSinglePlayer(fxmlLoader.getController());
-            container.setLevelThree(fxmlLoader.getController());
             container.setLevelThreeStage(singlePlayerWindow);
             container.getLevelThreeStage().setOnCloseRequest(event -> container.getGameFrameControllerSinglePlayer().running = false);
             singlePlayerWindow.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("img/icon.png")).toString()));

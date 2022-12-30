@@ -3,12 +3,10 @@ package com.example.snakegamefx;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 import java.net.URL;
@@ -46,29 +44,19 @@ public class GameFrameControllerMultiPlayer implements Initializable {
     private final double mapSizeInt;
     private final double snakeSpeedInt;
     private final double shootSpeedInt;
-    private final int whichMap;
-    private int row;
-    private int col;
-    private double height;
-    private double width;
     private int size;
     private int DELAY;
     private int shootDELAY;
     private boolean running = false;
-
-    private final int bodyParts = 4;
-
     private MultiPlayerSnake snake1;
     private MultiPlayerSnake snake2;
     private boolean restart = false;
 
-    public GameFrameControllerMultiPlayer(Container container, double mapSizeInt, double snakeSpeedInt, double shootSpeedInt, int whichMap) {
+    public GameFrameControllerMultiPlayer(Container container, double mapSizeInt, double snakeSpeedInt, double shootSpeedInt) {
         this.container = container;
         this.mapSizeInt = mapSizeInt;
         this.snakeSpeedInt = snakeSpeedInt;
         this.shootSpeedInt = shootSpeedInt;
-        this.whichMap = whichMap;
-        System.out.println("New instance");
     }
 
     public void startGame() {
@@ -97,15 +85,32 @@ public class GameFrameControllerMultiPlayer implements Initializable {
         Platform.runLater((() -> paneSpawn1.getChildren().clear()));
         Platform.runLater((() -> paneSpawn2.getChildren().clear()));
 
+        if(snake1.getHealth() == 0){
+            secondPlayerWon();
+            return;
+        }
 
+        if(snake2.getHealth() == 0){
+            firstPlayerWon();
+        }
     }
 
     private void firstPlayerWon(){
-
+            ImageView imageView = new ImageView(Objects.requireNonNull(getClass().getResource("img/winner.png")).toExternalForm());
+            imageView.setFitHeight(256);
+            imageView.setFitWidth(256);
+            imageView.setX(100);
+            imageView.setY(210);
+            Platform.runLater(() -> paneSnake1.getChildren().add(imageView));
     }
 
     private void secondPlayerWon(){
-
+        ImageView imageView = new ImageView(Objects.requireNonNull(getClass().getResource("img/winner.png")).toExternalForm());
+        imageView.setFitHeight(256);
+        imageView.setFitWidth(256);
+        imageView.setX(550);
+        imageView.setY(210);
+        Platform.runLater(() -> paneSnake1.getChildren().add(imageView));
     }
 
     private void countSize(){
@@ -120,8 +125,6 @@ public class GameFrameControllerMultiPlayer implements Initializable {
         } else if (mapSizeInt == 100.0) {
             size = 15;
         }
-        System.out.println("Wybrano size:" + size);
-        container.setSizeMP(size);
     }
 
     private void countSnakeSpeed(){
@@ -136,8 +139,6 @@ public class GameFrameControllerMultiPlayer implements Initializable {
         } else if (snakeSpeedInt == 100.0) {
             DELAY = 120;
         }
-        System.out.println("Wybrano size:" + size);
-        container.setSizeMP(size);
     }
 
     private void countShootSpeed(){
@@ -152,27 +153,18 @@ public class GameFrameControllerMultiPlayer implements Initializable {
         } else if (shootSpeedInt == 100.0) {
             shootDELAY = 30;
         }
-        System.out.println("Wybrano size:" + size);
-        container.setSizeMP(size);
     }
 
     private void init() {
-        System.out.println("Map size: " + mapSizeInt);
-        System.out.println("Snake speed: " + snakeSpeedInt);
-        System.out.println("Shoot speed: " + shootSpeedInt);
-
-
-        height = paneBackGround.getPrefHeight();
-        width = paneBackGround.getPrefWidth();
+        double height = paneBackGround.getPrefHeight();
+        double width = paneBackGround.getPrefWidth();
 
         countSize();
         countSnakeSpeed();
         countShootSpeed();
 
-        row = (int) (height / size);
-        System.out.println("row: "+row);
-        col = (int) (width / size);
-        System.out.println("col: "+col);
+        int row = (int) (height / size);
+        int col = (int) (width / size);
 
         container.setRowMP(row);
         container.setColMP(col);
@@ -187,18 +179,16 @@ public class GameFrameControllerMultiPlayer implements Initializable {
             paneBackGround.getChildren().add(line);
         }
 
-
-       snake1 = new MultiPlayerSnake(paneSnake1,paneShoot1,paneSpawn1, label1,hp1,container,size,DELAY, shootDELAY, 1,0,0,"Right",container.getLevelSwitcherSceneMP());
-       snake2 = new MultiPlayerSnake(paneSnake2,paneShoot2,paneSpawn2, label2,hp2,container,size,300,shootDELAY,2,col*size - bodyParts*size,row*size-size,"Left",container.getLevelSwitcherSceneMP());
+       snake1 = new MultiPlayerSnake(paneSnake1,paneShoot1,paneSpawn1, label1,hp1,container,size,DELAY, shootDELAY, 1,0,0,"Right");
+        int bodyParts = 4;
+        snake2 = new MultiPlayerSnake(paneSnake2,paneShoot2,paneSpawn2, label2,hp2,container,size,DELAY,shootDELAY,2, col *size - bodyParts *size, row *size-size,"Left");
        container.setSnake1(snake1);
        container.setSnake2(snake2);
     }
 
     public void onButtonClickMenu(){
         backToMenu.getScene().getWindow().hide();
-       // container.getLevelSwitcherMP().show();
         killTheGame();
-
     }
 
     public void keyboardMovesMP() {
@@ -227,8 +217,7 @@ public class GameFrameControllerMultiPlayer implements Initializable {
                         snake1.setCurrentDirection("Right");
                 }
                 case SPACE -> {
-                    if(snake1.isRunning() && !snake1.shoot.isShoot()){
-                        System.out.println("STRZELAM KURWO!!");
+                    if(snake1.isRunning() && snake1.shoot.isShoot()){
                         snake1.shoot.doShoot(snake1.getSnakeHeadX(),snake1.getSnakeHeadY(),snake1.getCurrentDirection());
                     }
                 }
@@ -249,8 +238,7 @@ public class GameFrameControllerMultiPlayer implements Initializable {
                         snake2.setCurrentDirection("Right");
                 }
                 case CONTROL -> {
-                    if(snake2.isRunning() && !snake2.shoot.isShoot()){
-                        System.out.println("STRZELAM KURWO!!");
+                    if(snake2.isRunning() && snake2.shoot.isShoot()){
                         snake2.shoot.doShoot(snake2.getSnakeHeadX(),snake2.getSnakeHeadY(),snake2.getCurrentDirection());
                     }
                 }

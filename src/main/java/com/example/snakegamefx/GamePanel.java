@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
@@ -31,7 +32,6 @@ public class GamePanel implements Initializable {
     }
 
     public void onSingleGamePicClick() {
-        System.out.println("Wybrano grę jedeno osobową ;)");
         try{
             container.setSnakeDecoration(snakeDecoration);
             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -57,7 +57,6 @@ public class GamePanel implements Initializable {
     }
 
     public void onDobleGamePicClick(){
-        System.out.println("Wybrano grę dwu osobową ;o");
         try{
             container.setSnakeDecoration(snakeDecoration);
             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -66,7 +65,7 @@ public class GamePanel implements Initializable {
             Scene multiPlayerScene = new Scene(fxmlLoader.load());
             Stage levelsSwitcher = new Stage();
             levelsSwitcher.setResizable(false);
-            levelsSwitcher.setTitle("Choose map!");
+            levelsSwitcher.setTitle("Lets fight!");
             levelsSwitcher.setScene(multiPlayerScene);
             levelsSwitcher.show();
             container.setLevelSwitcherSP(levelsSwitcher);
@@ -88,7 +87,6 @@ public class GamePanel implements Initializable {
         imageMP.setFitHeight(80);
         imageMP.setFitWidth(80);
         buttonMP.setGraphic(imageMP);
-        System.out.println("Inited SnakeDecotation");
         snakeDecoration = new SnakeDecoration(paneSnakeGamePanel,25,60);
         snakeDecoration.newSnakeDecoration("Up");
         snakeDecoration.newSnakeDecoration("Right");
