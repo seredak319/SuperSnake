@@ -29,12 +29,41 @@ Start screen with moving snakes, we can make more of them appear for a short whi
 
 ### Fight the boss
 
+The boss will try to chase you and shoot at you
+
 <img width="526" alt="image" src="https://user-images.githubusercontent.com/95620581/221372428-5c7789b6-aff0-4bf7-82b3-a918c6a5ca32.png">
 
 ### Time Challenge
 
 <img width="526" alt="image" src="https://user-images.githubusercontent.com/95620581/221372489-28950c67-93f2-49fd-9729-039bdd6ebeab.png">
 
+### Snake control - click Shift to start the game!
+As expected, 
+
+* W - up
+* A - left
+* S - down
+* D - right
+* spacebar - shoot!
+* Shift - start the game!
+
+### Guide
+
+<img width="528" alt="image" src="https://user-images.githubusercontent.com/95620581/221373128-7eb2f8df-b1c2-4c91-ae5b-6cb135e4948c.png">
 
 
+# Two players
 
+Adjust the speed of your and your opponent's snake, the speed of your shots, and the size of the map
+
+<img width="451" alt="image" src="https://user-images.githubusercontent.com/95620581/221373280-647ec3f4-7ded-4c24-9049-de7a45c225a8.png">
+
+### What can I say? Have fun!
+
+* First player WASD + spacebar
+* Second player rows + ctrl
+
+<img width="676" alt="image" src="https://user-images.githubusercontent.com/95620581/221373402-9c38c4df-09f3-4a3a-bb1f-b6d1ef46acb5.png">
+
+### Environment
+Just open pom.xml 
