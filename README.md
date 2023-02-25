@@ -3,6 +3,9 @@
 ### What it is?
 Desktop game created by me in my free time at the beginning of my adventure with Java.
 
+### Link to download?
+ssssoon..
+
 
 ## Initial screen
 
@@ -66,4 +69,7 @@ Adjust the speed of your and your opponent's snake, the speed of your shots, and
 <img width="676" alt="image" src="https://user-images.githubusercontent.com/95620581/221373402-9c38c4df-09f3-4a3a-bb1f-b6d1ef46acb5.png">
 
 ### Environment
-Just open pom.xml 
+Just open pom.xml ( ͡° ͜ʖ ͡°)
+
+### Icon sources
+www.flaticon.com author: freepik
